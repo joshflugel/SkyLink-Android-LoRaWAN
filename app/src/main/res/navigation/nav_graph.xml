@@ -3,29 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/main_dest">
+    app:startDestination="@id/permissions_dest">
 
     <fragment
-        android:id="@+id/main_dest"
-        android:name="com.devexperto.architectcoders.ui.main.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
+        android:id="@+id/permissions_dest"
+        android:name="com.lora.skylink.ui.permissions.PermissionsFragment"
+        android:label="fragment_permissions"
+        tools:layout="@layout/fragment_permissions" >
         <action
-            android:id="@+id/action_main_to_detail"
-            app:destination="@id/detail_dest"
+            android:id="@+id/action_permissions_to_scan_dest"
+            app:destination="@id/scan_dest"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
-        android:id="@+id/detail_dest"
-        android:name="com.devexperto.architectcoders.ui.detail.DetailFragment"
-        android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" >
-        <argument
-            android:name="movieId"
-            app:argType="integer"
-            android:defaultValue="-1" />
+        android:id="@+id/scan_dest"
+        android:name="com.lora.skylink.ui.scan.ScanFragment"
+        android:label="fragment_scan"
+        tools:layout="@layout/fragment_scan" >
+        <action
+            android:id="@+id/action_scan_dest_to_chat_dest"
+            app:destination="@id/chat_dest" />
+    </fragment>
+    <fragment
+        android:id="@+id/chat_dest"
+        android:name="com.lora.skylink.ui.chat.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
     </fragment>
 </navigation>

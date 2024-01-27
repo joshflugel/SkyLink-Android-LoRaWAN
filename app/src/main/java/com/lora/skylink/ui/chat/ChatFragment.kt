@@ -1,32 +1,22 @@
 package com.lora.skylink.ui.chat
 
-import androidx.lifecycle.ViewModelProvider
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.lora.skylink.R
+import com.lora.skylink.databinding.FragmentChatBinding
 
-class ChatFragment : Fragment() {
+class ChatFragment : Fragment(R.layout.fragment_chat) {
 
-    companion object {
-        fun newInstance() = ChatFragment()
+    private val viewModel: ChatViewModel by viewModels() //dev ex says
+    private lateinit var  chatState: ChatState
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        chatState = buildChatState()
+        val binding = FragmentChatBinding.bind(view)
+        binding.btnSend.setOnClickListener{ //TODO
+        }
     }
-
-    private lateinit var viewModel: ChatViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_chat, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ChatViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
 }

@@ -6,27 +6,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.lora.skylink.R
+import com.lora.skylink.databinding.FragmentPermissionsBinding
 
-class PermissionsFragment : Fragment() {
+class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
 
-    companion object {
-        fun newInstance() = PermissionsFragment()
+    private val viewModel : PermissionsViewModel by viewModels()
+    private lateinit var permissionsState : PermissionsState
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        permissionsState = buildPermissionsState()
+        val binding = FragmentPermissionsBinding.bind(view)
+        binding.btnGotoScan.setOnClickListener{
+            permissionsState.onScanDevicesClicked()
+        }
     }
-
-    private lateinit var viewModel: PermissionsViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_permissions, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(PermissionsViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
 }
