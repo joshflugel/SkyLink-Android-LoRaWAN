@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "SkyLink"
 include(":app")
- 
+include(":data")
