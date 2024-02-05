@@ -1,10 +1,8 @@
 package com.lora.skylink.ui.scan
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
+//@HiltViewModel
 class ScanViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 /*

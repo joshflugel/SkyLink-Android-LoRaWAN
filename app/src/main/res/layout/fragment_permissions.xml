@@ -39,7 +39,8 @@
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
                     android:src="@drawable/img_header_permissions_control"
-                    tools:src="@mipmap/ic_launcher" />
+                    tools:src="@mipmap/ic_launcher"
+                    android:contentDescription="@string/none"/>
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar_permissions"
@@ -57,16 +58,17 @@
             android:orientation="vertical"
             android:gravity="center">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="" />
+                android:layout_marginBottom="16dp"
+                android:text="@string/permissions_warning"
+                android:textAlignment="center"/>
 
             <Button
                 android:id="@+id/btnGotoScan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Scan BLE Devices" />
+                android:text="@string/scan_ble_devices" />
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

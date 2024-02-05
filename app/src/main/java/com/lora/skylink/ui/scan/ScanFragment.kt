@@ -1,58 +1,74 @@
 package com.lora.skylink.ui.scan
 
-import androidx.lifecycle.ViewModelProvider
+import android.bluetooth.BluetoothAdapter
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.lora.skylink.R
+import com.lora.skylink.common.loge
 import com.lora.skylink.databinding.FragmentScanBinding
-import com.lora.skylink.ui.common.launchAndCollect
-
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+@AndroidEntryPoint
 class ScanFragment : Fragment(R.layout.fragment_scan) {
-
-    // Android style MVVM
-    /*
-    companion object {
-        fun newInstance() = ScanFragment()
-    }
-
-    private lateinit var viewModel: ScanViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_scan, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ScanViewModel::class.java)
-        // TODO: Use the ViewModel
-    }*/
 
     private val viewModel: ScanViewModel by viewModels()
     private lateinit var scanState : ScanState
+
+    @Inject lateinit var bluetoothAdapter: BluetoothAdapter
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         scanState = buildScanState()
+
         val binding = FragmentScanBinding.bind(view)
         binding.scanFragmentToolbar.setNavigationOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         binding.btnGoToChat.setOnClickListener{
-            scanState.onGoToChatClicked()
+            //scanState.onGoToChatClicked()
+            if(scanState.arePermissionsGranted()){
+                loge("ScanFragment - ALL PERMISSIONS GREEN")
+            }
+            else{
+                loge("ScanFragment - SOME PERMISSIONS WERE MISSING, Returning to PermissionsFragment")
+                scanState.navigateToPermissionsFragment()
+            }
         }
 
-        /* To Do
-        viewLifecycleOwner.launchAndCollect(viewModel.state) {
-
+        val callback = object : OnBackPressedCallback(true ) {
+            override fun handleOnBackPressed() {
+                if(!scanState.arePermissionsGranted() || !isBluetoothAdapterReady()) {
+                    scanState.navigateToPermissionsFragment()
+                }
+            }
         }
-         */
+        viewLifecycleOwner.lifecycleScope.launch {
+            requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+        }
+
     }
+
+    override fun onResume() {
+        super.onResume()
+        if(!(scanState.arePermissionsGranted() && isBluetoothAdapterReady())) {
+            scanState.navigateToPermissionsFragment()
+        }
+    }
+
+    fun isBluetoothAdapterReady():Boolean {
+        bluetoothAdapter.let { adapter ->
+            if (adapter.isEnabled) {
+                return true
+            }
+        }
+        return false
+    }
+
 }
