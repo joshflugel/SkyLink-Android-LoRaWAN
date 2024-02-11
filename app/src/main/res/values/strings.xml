@@ -3,7 +3,11 @@
     <string name="name_fragment_permission">Permissions</string>
     <string name="name_fragment_scan_lora_Devices">Scan LoRa WAN devices</string>
     <string name="name_fragment_lorawan_chat">LoRa WAN Chat</string>
-    <string name="scan_ble_devices">Scan BLE Devices</string>
     <string name="permissions_warning">Please grant Location and Bluetooth permissions to continue using this App.</string>
+    <string name="scan_grant_permissions">Grant Permissions</string>
     <string name="none">none</string>
+    <string name="scan_lorawan_devices">Scan LoraWAN devices</string>
+    <string name="launch_chat">Launch Chat</string>
+    <string name="tap_on_a_lora_transceiver">Reset the Arduino into Pairing Mode. Tap a LoRa-BLE Transceiver to Connect</string>
+    <string name="detail_image">Detail Image</string>
 </resources>

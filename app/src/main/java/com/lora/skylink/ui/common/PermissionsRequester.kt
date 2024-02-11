@@ -7,45 +7,22 @@ import androidx.fragment.app.Fragment
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-//val BLUETOOTH_PERMISSION_REQUEST_CODE = 200
 
 
-/* FCKUP
-class PermissionsRequester(private val context: Context, private val permissions: Array<String>) {
+class PermissionsRequester(private val fragment: Fragment, private val permissions: Array<String> = requiredAppPermissions) {
+
+  //  private lateinit var fragment: Fragment
     private var onRequest: (Boolean) -> Unit = {}
-    private val launcher =
-        (context as? FragmentActivity)?.registerForActivityResult(ActivityResultContracts
-            .RequestMultiplePermissions()) { isGrantedMap: Map<String, Boolean> ->
-                onRequest(isGrantedMap.values.all { it })
-        }
-
-    suspend fun request(): Boolean =
-        suspendCancellableCoroutine { continuation ->
-            onRequest = {
-                loge("rabbit hole")
-                continuation.resume(it)
-            }
-            launcher?.launch(permissions)
-        }
-    fun checkAllPermissions(): Boolean {
-        for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                return false
-            }
-        }
-        return true
+    var launcher = fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGrantedMap: Map<String, Boolean> ->
+        onRequest(isGrantedMap.values.all { it })
     }
 
-
- */
-
-class PermissionsRequester(val fragment: Fragment, private val permissions: Array<String> = requiredAppPermissions) {
-
-    private var onRequest: (Boolean) -> Unit = {}
-    val launcher =
-        fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGrantedMap: Map<String, Boolean> ->
+    fun init(fragment: Fragment) {
+      //  this.fragment = fragment
+        this.launcher = fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGrantedMap: Map<String, Boolean> ->
             onRequest(isGrantedMap.values.all { it })
         }
+    }
 
     suspend fun request(): Boolean =
         suspendCancellableCoroutine { continuation ->
@@ -54,6 +31,7 @@ class PermissionsRequester(val fragment: Fragment, private val permissions: Arra
             }
             launcher.launch(permissions)
         }
+
     fun checkAllPermissions(): Boolean {
         for (permission in permissions) {
             if (ContextCompat.checkSelfPermission(fragment.requireContext(), permission) != PackageManager.PERMISSION_GRANTED) {

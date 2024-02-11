@@ -65,10 +65,10 @@
                 android:textAlignment="center"/>
 
             <Button
-                android:id="@+id/btnGotoScan"
+                android:id="@+id/btn_grant_permissions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/scan_ble_devices" />
+                android:text="@string/scan_grant_permissions" />
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

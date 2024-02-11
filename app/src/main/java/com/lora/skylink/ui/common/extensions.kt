@@ -1,11 +1,18 @@
 package com.lora.skylink.ui.common
 
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+
+fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = true): View =
+    LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 
 fun <T> LifecycleOwner.launchAndCollect(
     flow: Flow<T>,

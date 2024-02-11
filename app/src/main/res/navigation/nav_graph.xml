@@ -24,16 +24,24 @@
         android:label="fragment_scan"
         tools:layout="@layout/fragment_scan" >
         <action
-            android:id="@+id/action_scan_dest_to_chat_dest"
-            app:destination="@id/chat_dest" />
-        <action
             android:id="@+id/action_scan_dest_to_permissions_dest"
             app:destination="@id/permissions_dest" />
+        <action
+            android:id="@+id/action_scan_dest_to_chat_dest"
+            app:destination="@id/chat_dest">
+        </action>
     </fragment>
     <fragment
         android:id="@+id/chat_dest"
         android:name="com.lora.skylink.ui.chat.ChatFragment"
-        android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" >
+        android:label="fragment_chat">
+        <argument android:name="scanResult"
+            app:argType="android.bluetooth.BluetoothDevice" />
+        <action
+            android:id="@+id/action_chat_dest_to_scan_dest"
+            app:destination="@id/scan_dest"
+            app:popUpTo="@id/scan_dest" />
+
     </fragment>
+
 </navigation>

@@ -18,7 +18,7 @@
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="150dp"
                 app:contentScrim="?attr/colorPrimary"
                 app:statusBarScrim="?attr/colorPrimaryVariant"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -34,7 +34,7 @@
                     tools:src="@mipmap/ic_launcher" />
 
                 <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar_chat"
+                    android:id="@+id/chat_fragment_toolbar"
                     android:layout_width="wrap_content"
                     android:layout_height="?attr/actionBarSize"
                     app:title="@string/name_fragment_lorawan_chat" />
@@ -42,18 +42,22 @@
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
-
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.chat.ChatFragment"
-            android:orientation="vertical"
-            android:gravity="center">
-            <Button
-                android:id="@+id/btnSend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Send" />
-        </LinearLayout>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".ui.chat.ChatFragment"
+                android:orientation="vertical"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/btnSend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Send" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

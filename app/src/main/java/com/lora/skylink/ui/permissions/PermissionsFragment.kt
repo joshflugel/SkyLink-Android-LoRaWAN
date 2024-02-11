@@ -31,7 +31,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
         permissionsState = buildPermissionsState()
 
         val binding = FragmentPermissionsBinding.bind(view)
-        binding.btnGotoScan.setOnClickListener{
+        binding.btnGrantPermissions.setOnClickListener{
             handleScanDevicesButtonClicked()
         }
     }
