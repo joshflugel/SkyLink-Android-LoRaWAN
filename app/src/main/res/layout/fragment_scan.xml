@@ -24,14 +24,17 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:theme="@style/AppTheme.DarkOverlay"
             android:fitsSystemWindows="true">
-
+            <!--
+            app:contentScrim="?attr/colorPrimary"
+            -->
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsingLayout"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                app:contentScrim="?attr/colorPrimary"
+                app:contentScrim="@color/toolbar_faded_dray"
                 app:statusBarScrim="?attr/colorPrimaryVariant"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -54,12 +57,30 @@
                     app:title="@string/name_fragment_scan_lora_Devices" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
+            <Button
+                android:id="@+id/btn_scan_devices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_margin="4dp"
+                android:text="@string/scan_lorawan_devices"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_marginRight="60dp"
+                android:text="@string/tap_on_a_lora_transceiver"
+                android:textSize="11sp" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -67,21 +88,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
                 tools:context=".ui.scan.ScanFragment">
 
-                <Button
-                    android:id="@+id/btn_scan_devices"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_margin="4dp"
-                    android:text="@string/scan_lorawan_devices"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:layout_marginRight="60dp"
-                    android:text="@string/tap_on_a_lora_transceiver"
-                    android:textSize="10sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/scan_results_recycler_view"
