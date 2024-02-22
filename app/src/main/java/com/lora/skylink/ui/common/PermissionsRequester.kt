@@ -11,14 +11,12 @@ import kotlin.coroutines.resume
 
 class PermissionsRequester(private val fragment: Fragment, private val permissions: Array<String> = requiredAppPermissions) {
 
-  //  private lateinit var fragment: Fragment
     private var onRequest: (Boolean) -> Unit = {}
-    var launcher = fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGrantedMap: Map<String, Boolean> ->
+    private var launcher = fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGrantedMap: Map<String, Boolean> ->
         onRequest(isGrantedMap.values.all { it })
     }
 
     fun init(fragment: Fragment) {
-      //  this.fragment = fragment
         this.launcher = fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGrantedMap: Map<String, Boolean> ->
             onRequest(isGrantedMap.values.all { it })
         }

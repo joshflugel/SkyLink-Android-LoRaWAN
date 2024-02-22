@@ -3,25 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+<!--
+    <data>
+        <import type="java.util.List" />
+        <import type="com.lora.skylink.ui.chat.ChatMessage" />
+        <variable
+            name="chatmessages"
+            type="List&lt;ChatMessage"/>
+    </data>
+    -->
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context = ".ui.scan.ChatFragment">
-
+        android:orientation="vertical">
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayoutChat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/AppTheme.DarkOverlay"
-            android:fitsSystemWindows="true">
+            android:fitsSystemWindows="true"
+            tools:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                app:contentScrim="?attr/colorPrimary"
+                android:layout_height="100dp"
                 app:statusBarScrim="?attr/colorPrimaryVariant"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:layout_scrollFlags="enterAlwaysCollapsed">
 
                 <ImageView
                     android:id="@+id/img_header_chat"
@@ -31,7 +39,8 @@
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
                     android:src="@drawable/erc_minilink"
-                    tools:src="@mipmap/ic_launcher" />
+                    tools:src="@mipmap/ic_launcher"
+                    android:contentDescription="@string/chat_ui_image_header" />
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/chat_fragment_toolbar"
@@ -42,22 +51,51 @@
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/conversation_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-            <LinearLayout
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:paddingBottom="4dp"
+            />
+        <TextView
+            android:id="@+id/text_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent" />
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#a0a0a0"
+            />
+        <RelativeLayout
+            android:id="@+id/layout_chatbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent">
+            <EditText
+                android:layout_marginStart="16dp"
+                android:id="@+id/input_textbox"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context=".ui.chat.ChatFragment"
-                android:orientation="vertical"
-                android:gravity="center">
-                <Button
-                    android:id="@+id/btnSend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Send" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/button_send"
+                android:background="@android:color/transparent"
+                android:hint="@string/type_message"
+                android:inputType="text"
+                android:maxLines="6"
+                tools:ignore="Autofill" />
+            <Button
+                android:id="@+id/button_send"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:background="@color/gray_incoming_transparent"
+                android:text="@string/send"
+                android:textColor="@color/white"/>
+        </RelativeLayout>
+    </LinearLayout>
 </layout>

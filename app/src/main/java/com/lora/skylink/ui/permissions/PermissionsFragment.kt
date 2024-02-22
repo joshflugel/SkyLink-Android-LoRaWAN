@@ -34,9 +34,13 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
         binding.btnGrantPermissions.setOnClickListener{
             handleScanDevicesButtonClicked()
         }
+        if (permissionsState.areAllPermissionsGranted() && isBluetoothAdapterReady()) {
+            loge("ALL PERMISSIONS OK, BLUETOOTH DEVICE OK... proceeding to SCAN UI")
+            permissionsState.navigateToScanFragment()
+        }
     }
 
-    fun handleScanDevicesButtonClicked() {
+    private fun handleScanDevicesButtonClicked() {
             if (permissionsState.areAllPermissionsGranted() && isBluetoothAdapterReady()) {
                 loge("ALL PERMISSIONS OK")
                 permissionsState.navigateToScanFragment()
@@ -61,7 +65,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
             }
     }
 
-    fun isBluetoothAdapterReady():Boolean {
+    private fun isBluetoothAdapterReady():Boolean {
         bluetoothAdapter.let { adapter ->
             if (adapter.isEnabled) {
                 return true

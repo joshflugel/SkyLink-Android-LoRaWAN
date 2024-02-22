@@ -39,13 +39,12 @@ class ScanResultAdapter(
             parent,
             false
         )
-
          */
         view = parent.inflate(R.layout.row_scan_result, false)
         return ViewHolder(view, onClickListener)
     }
 
-    override fun getItemCount() = items.count() //{ it.device.name?.startsWith("LORA") == true }
+    override fun getItemCount() = items.count()
 
     @SuppressLint("MissingPermission")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -53,11 +52,6 @@ class ScanResultAdapter(
         // FLUGEL BLE Device: F4:12:FA:66:37:CD
         // Log.e("joshtag","FLUGEL BLE Device: " + item.device)
         holder.bind(item)
-        // To-Do, do not access BT device directly, to avoid the hassle of requesting BT permissions
-        if (item.device.name != null && !item.device.name.startsWith("LORA")) {
-
-           // if (item.device.name.startsWith("LORA")) { holder.bind(item) }
-        }
     }
 
     class ViewHolder(

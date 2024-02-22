@@ -11,10 +11,6 @@ fun Fragment.buildChatState(
     navController: NavController = findNavController()
     ) = ChatState(navController)
 class ChatState (private val navController: NavController) {
-    fun onSendClicked() {
-        // TODO TxMessage
-    }
-
     fun navigateToScanFragment() {
         GlobalScope.launch(Dispatchers.Main) {
             val action = ChatFragmentDirections.actionChatDestToScanDest()

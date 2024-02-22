@@ -41,7 +41,6 @@
             android:id="@+id/action_chat_dest_to_scan_dest"
             app:destination="@id/scan_dest"
             app:popUpTo="@id/scan_dest" />
-
     </fragment>
 
 </navigation>

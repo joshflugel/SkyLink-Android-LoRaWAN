@@ -5,6 +5,8 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.lora.skylink.ui.common.requiredAppPermissions
 import dagger.Module
@@ -26,6 +28,7 @@ class AppModule {
         return bluetoothManager.adapter
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     @Provides
     fun checkAllPermissions(context: Context): Boolean {
         for (permission in requiredAppPermissions) {

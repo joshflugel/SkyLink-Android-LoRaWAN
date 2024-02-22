@@ -564,5 +564,5 @@ object ConnectionManager {
         }
     }
 
-    public fun BluetoothDevice.isConnected() = deviceGattMap.containsKey(this)
+    fun BluetoothDevice.isConnected() = deviceGattMap.containsKey(this)
 }

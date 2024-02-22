@@ -1,7 +1,10 @@
 package com.lora.skylink.ui.common
 
 import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
 
+@RequiresApi(Build.VERSION_CODES.S)
 val requiredAppPermissions = arrayOf(
     Manifest.permission.BLUETOOTH,
     Manifest.permission.BLUETOOTH_ADMIN,

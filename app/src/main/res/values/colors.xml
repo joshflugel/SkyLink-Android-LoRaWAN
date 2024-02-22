@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="blue_sky">#cc87CEEB</color>
+    <color name="blue_tooth">#dd2f83ff</color>
+    <color name="gray_timestamp">#C0C0C0</color>
+    <color name="gray_incoming_transparent">#10FFFFFF</color>
 </resources>
