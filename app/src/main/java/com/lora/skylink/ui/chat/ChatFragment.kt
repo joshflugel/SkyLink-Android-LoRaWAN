@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.lora.skylink.R
-import com.lora.skylink.bluetooth.ConnectionEventListener
 import com.lora.skylink.bluetooth.CharacteristicProperty
+import com.lora.skylink.bluetooth.ConnectionEventListener
 import com.lora.skylink.bluetooth.ConnectionManager
 import com.lora.skylink.bluetooth.byteArrayToAsciiString
 import com.lora.skylink.bluetooth.isIndicatable
@@ -170,12 +170,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             if(previousWindowBottomPosition == 0) {previousWindowBottomPosition = r.bottom}
             val screenHeightChange = currentWindowBottomPosition - previousWindowBottomPosition
 
+            /*
             logd("keypadHeight = $keypadHeight")
             logd("r.bottom = ${r.bottom}")
             logd("r.top    = ${r.top}")
             logd("r.height = ${r.height()}")
             loge("* RecyclerHeight: ${binding.conversationRecyclerView.height}")
             loge("* RecyclerY     : ${binding.conversationRecyclerView.y}")
+             */
 
             if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is enough to determine keyboard is opened
                 if (!isKeyboardShowing) {

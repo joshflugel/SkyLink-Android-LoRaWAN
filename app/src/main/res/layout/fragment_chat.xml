@@ -87,6 +87,7 @@
                 android:hint="@string/type_message"
                 android:inputType="text"
                 android:maxLines="6"
+                android:maxLength="220"
                 tools:ignore="Autofill" />
             <Button
                 android:id="@+id/button_send"
