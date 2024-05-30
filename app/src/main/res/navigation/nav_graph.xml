@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/permissions_dest"
-        android:name="com.lora.skylink.ui.permissions.PermissionsFragment"
+        android:name="com.lora.skylink.presentation.permissions.PermissionsFragment"
         android:label="fragment_permissions"
         tools:layout="@layout/fragment_permissions" >
         <action
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/scan_dest"
-        android:name="com.lora.skylink.ui.scan.ScanFragment"
+        android:name="com.lora.skylink.presentation.scan.ScanFragment"
         android:label="fragment_scan"
         tools:layout="@layout/fragment_scan" >
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/chat_dest"
-        android:name="com.lora.skylink.ui.chat.ChatFragment"
+        android:name="com.lora.skylink.presentation.chat.ChatFragment"
         android:label="fragment_chat">
         <argument android:name="scanResult"
             app:argType="android.bluetooth.BluetoothDevice" />

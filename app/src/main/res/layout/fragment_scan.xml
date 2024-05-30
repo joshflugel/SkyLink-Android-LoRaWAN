@@ -5,7 +5,7 @@
 
     <!--
     <data>
-        <import type="android.bluetooth.le.ScanResult"/>
+        <import type=" deandroid.bluetooth.le.ScanResult"/>
         <import type="java.util.List"/>
         <variable
             name="bluetoothdevices"
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context=".ui.scan.ScanFragment">
+        tools:context=".presentation.scan.ScanFragment">
 
         <com.google.android.material.appbar.AppBarLayout
             tools:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_margin="4dp"
-                android:text="@string/scan_lorawan_devices"/>
+                android:text="@string/start_scanning"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-                tools:context=".ui.scan.ScanFragment">
+                tools:context=".presentation.scan.ScanFragment">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/scan_results_recycler_view"
