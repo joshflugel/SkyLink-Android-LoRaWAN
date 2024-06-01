@@ -180,6 +180,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             loge("* RecyclerHeight: ${binding.conversationRecyclerView.height}")
             loge("* RecyclerY     : ${binding.conversationRecyclerView.y}")
              */
+
             if (keypadHeight > screenHeight * 0.15) { // 0.15 ratio is enough to determine keyboard is opened
                 if (!isKeyboardShowing) {
                     isKeyboardShowing = true

@@ -5,7 +5,7 @@ enum class MessageType {
 }
 class ChatMessage {
     var username = "Username"
-    var text = "This is a sample ChatMessage"
-    var timestamp = "23:39"
+    var text = "Some text"
+    var timestamp = "0:00"
     var type = MessageType.SENT
 }

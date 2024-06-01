@@ -37,6 +37,7 @@ val message3b = ChatMessage().apply {
     type = MessageType.SENT
 }
 
+
 val message4 = ChatMessage().apply {
     text = "What about you?"
     timestamp = "12:15"

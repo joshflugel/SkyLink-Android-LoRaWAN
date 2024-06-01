@@ -9,7 +9,6 @@ class ScanBluetoothLowEnergyDevicesUseCase @Inject constructor(
     private val repository: BluetoothLowEnergyRepositoryImpl
 ) {
     fun startScanning() {
-        println("FLUGEL UseCase SCAN BLE")
      repository.startBleScan()
     }
     fun stopScanning() = repository.stopBleScan()

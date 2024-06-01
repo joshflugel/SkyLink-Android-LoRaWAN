@@ -48,7 +48,6 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         permissionsRequester = PermissionsRequester(this)
         binding = FragmentScanBinding.bind(view)
 
-
         binding.scanFragmentToolbar.setNavigationOnClickListener {
             if (!permissionsRequester.checkAllPermissions() ) {
                 requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -127,6 +126,7 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         }
     }
 
+    // ToDo
     // MIGRATE TO BLE CONTROLLER / DATA LAYER
     private fun connectToBluetoothLowEnergyDevice(device: BluetoothDevice) {
             loge("Connecting to $device.address")
@@ -150,119 +150,6 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
             onDisconnect = {
                 loge("...DISCONNECTED from Bluetooth LoRa Arduino")
             }
-
         }
     }
 }
-
-
-
-
-
-/*
-private val isBluetoothEnabled: Boolean
-//get() = bluetoothAdapter?.isEnabled == true
-get() = bluetoothArduinoLoraAdapter?.isEnabled == true
-
-*/
-
-/* refactored to DI
-    private val bluetoothManager by lazy {
-        context?.getSystemService(BluetoothManager::class.java)
-    }
-    private val bluetoothAdapter by lazy {
-        bluetoothManager?.adapter
-    }
- */
-
-/*
-fun arePermissionsGranted(): Boolean {
-    return PermissionsRequester(this).checkAllPermissions()
-}
- */
-
-/* OBSOLETE
-private val bleScanner by lazy {
-    bluetoothArduinoLoraAdapter.bluetoothLeScanner
-}
-//  var bluetoothManager = BluetoothTransceiverManager()
-
-
-
-// onCreateView:
-        /*
-        binding.btnGoToChat.setOnClickListener{
-            if(scanState.arePermissionsGranted() && isBluetoothAdapterReady()){
-                loge("ScanFragment - ALL PERMISSIONS GREEN")
-                scanState.navigateToChatFragment()
-            }
-            else{
-                loge("ScanFragment - SOME PERMISSIONS WERE MISSING, Returning to PermissionsFragment")
-                scanState.navigateToPermissionsFragment()
-            }
-        }
-         */
-*/
-
-/*
-    private fun checkBluetoothPermissions() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            permissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                )
-            )
-        }
-    }
-
-
-
-        override fun onResume() {
-        super.onResume()
-
-            //checkAllPermissions(this)
-        ConnectionManager.registerListener(connectionEventListener)
-        //if(!(arePermissionsGranted() && isBluetoothAdapterON())) {
-        /*
-        if(!viewModel.isBluetoothAdapterENABLED()) {
-            loge("ScanFragment - SOME PERMISSIONS WERE MISSING, Returning to PermissionsFragment")
-            navigateToPermissionsFragment()
-        }
-
-
-                binding.btnScanDevices.setOnClickListener {
-            /*
-            //if(!(arePermissionsGranted() && isBluetoothAdapterON())) {
-            if(!viewModel.isBluetoothAdapterENABLED()) {
-                loge("ScanFragment - SOME PERMISSIONS WERE MISSING, Returning to PermissionsFragment")
-                navigateToPermissionsFragment()
-            } else {
-                //if (isScanning) stopBleScanLEGACY() else startBleScanLEGACY()
-                if (isScanning) viewModel.stopScanning() else viewModel.startScanning()
-            }
-/*
-    private val enableBluetoothLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { /* Not needed */ }
-
-    val permissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { perms ->
-        val hasBluetoothConnectPermission = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            perms[Manifest.permission.BLUETOOTH_CONNECT] == true
-        } else true
-
-        // Launch Bluetootn ON prompt if persision ok but BLE is off
-        /*
-        if(hasBluetoothConnectPermission && !viewModel.isBluetoothAdapterENABLED()) {
-            enableBluetoothLauncher.launch(
-                Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            )
-        }
-        */
-        if(hasBluetoothConnectPermission) {
-            viewModel.checkBluetoothEnabled()
-        }
-    }
- */

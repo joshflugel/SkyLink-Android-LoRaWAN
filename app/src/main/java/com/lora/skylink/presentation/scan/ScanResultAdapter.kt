@@ -24,8 +24,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lora.skylink.databinding.RowScanResultBinding
 
 
-
-
 class ScanResultAdapter(
     private var items: List<ScanResult>,
     private val onItemClick: (ScanResult) -> Unit
@@ -44,7 +42,7 @@ class ScanResultAdapter(
 
     fun submitList(newItems: List<ScanResult>) {
         items = newItems
-        notifyDataSetChanged() // Notify the adapter that the data has changed
+        notifyDataSetChanged()
     }
 
     class ScanResultViewHolder(
@@ -60,51 +58,3 @@ class ScanResultAdapter(
         }
     }
 }
-
-
-/*
-class ScanResultAdapterORIGINAL(
-    private val items: List<ScanResult>,
-    private val onClickListener: ((device: ScanResult) -> Unit)
-) : RecyclerView.Adapter<ScanResultAdapterORIGINAL.ViewHolder>() {
-
-    lateinit var view: View
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        /*
-        val view = parent.context.layoutInflater.inflate(
-            R.layout.row_scan_result,
-            parent,
-            false
-        )
-         */
-        view = parent.inflate(R.layout.row_scan_result, false)
-        return ViewHolder(view, onClickListener)
-    }
-
-    override fun getItemCount() = items.count()
-
-    @SuppressLint("MissingPermission")
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
-        // FLUGEL BLE Device: F4:12:FA:66:37:CD
-        // Log.e("joshtag","FLUGEL BLE Device: " + item.device)
-        holder.bind(item)
-    }
-
-    class ViewHolder(
-        private val view: View,
-        private val onClickListener: ((device: ScanResult) -> Unit)
-    ) : RecyclerView.ViewHolder(view) {
-        private var binding = RowScanResultBinding.bind(view)
-        @SuppressLint("MissingPermission")
-        fun bind(result: ScanResult) {
-            binding.deviceName.text = result.device.name ?: "Unnamed"
-            binding.macAddress.text = result.device.address
-            binding.signalStrength.text = "${result.rssi} dBm"
-            view.setOnClickListener { onClickListener.invoke(result)}
-        }
-    }
-}
-
-
- */
