@@ -1,14 +1,12 @@
 package com.lora.skylink.presentation.scan
 
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.le.ScanResult
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
-import com.lora.skylink.data.BluetoothConnectivityRepositoryImpl
 import com.lora.skylink.domain.CheckBluetoothEnabledUseCase
+import com.lora.skylink.domain.ManageBluetoothDeviceConnectionUseCase
 import com.lora.skylink.domain.ScanBluetoothLowEnergyDevicesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -20,19 +18,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ScanViewModel @Inject constructor(
-    private val bluetoothConnectivityRepository: BluetoothConnectivityRepositoryImpl,
     private val scanBluetoothLeDevicesUseCase: ScanBluetoothLowEnergyDevicesUseCase,
-    private val checkBluetoothEnabledUseCase: CheckBluetoothEnabledUseCase
+    private val checkBluetoothEnabledUseCase: CheckBluetoothEnabledUseCase,
+    private val manageBluetoothDeviceConnectionUseCase: ManageBluetoothDeviceConnectionUseCase
 ) : ViewModel() {
-
-    private val _scannedDevices = MutableStateFlow<List<ScanResult>>(emptyList())
-    val scannedDevices: StateFlow<List<ScanResult>> = _scannedDevices
 
     private val _uiState = MutableStateFlow(ScanUIState())
     val uiState: StateFlow<ScanUIState> = _uiState
 
     private val _isBluetoothEnabled = MutableLiveData<Boolean>()
-    val isBluetoothEnabled: LiveData<Boolean> get() = _isBluetoothEnabled
 
     private var scanJob: Job? = null
     fun startScanning() {
@@ -54,25 +48,22 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    fun checkBluetoothEnabled() {
+    fun showEnableBluetoothPromptIfDisabled() {
         viewModelScope.launch {
-            _isBluetoothEnabled.value = checkBluetoothEnabledUseCase.isBluetoothEnabled()
+            _isBluetoothEnabled.value = checkBluetoothEnabledUseCase()
         }
     }
 
     fun connectToDevice(device: BluetoothDevice) {
-        bluetoothConnectivityRepository.connectToDevice(device)
-    }
-
-    fun disconnectFromDevice(device: BluetoothDevice) {
-        bluetoothConnectivityRepository.disconnectFromDevice(device)
+        viewModelScope.launch { manageBluetoothDeviceConnectionUseCase.connectToDevice(device) }
     }
 
     fun registerConnectionEventListener(listener: ConnectionEventListener) {
-        bluetoothConnectivityRepository.registerConnectionEventListener(listener)
+        viewModelScope.launch {manageBluetoothDeviceConnectionUseCase.registerConnectionEventListener(listener) }
     }
 
     fun unregisterConnectionEventListener(listener: ConnectionEventListener) {
-        bluetoothConnectivityRepository.unregisterConnectionEventListener(listener)
+        viewModelScope.launch {manageBluetoothDeviceConnectionUseCase.unregisterConnectionEventListener(listener) }
     }
+
 }

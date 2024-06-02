@@ -6,7 +6,7 @@ import javax.inject.Inject
 class CheckBluetoothEnabledUseCase @Inject constructor(
     private val bleRepository: BluetoothLowEnergyRepositoryImpl
 ) {
-    fun isBluetoothEnabled(): Boolean {
+    operator fun invoke(): Boolean {
         return bleRepository.isBluetoothAdapterEnabled()
     }
 }

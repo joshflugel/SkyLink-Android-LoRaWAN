@@ -47,13 +47,13 @@ dependencies {
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
 
     implementation("androidx.constraintlayout:constraintlayout:2.2.0-alpha13")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13")
+    //implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha13")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
 
     // MVVM
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
 
     // NAVIGATION
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
@@ -67,6 +67,7 @@ dependencies {
     implementation("androidx.test:runner:1.5.2")
     kapt("com.google.dagger:hilt-compiler:2.51.1")
     kapt("androidx.hilt:hilt-compiler:1.2.0")
+    //implementation("androidx.savedstate:savedstate:1.2.1")
 
 
     testImplementation("junit:junit:4.13.2")

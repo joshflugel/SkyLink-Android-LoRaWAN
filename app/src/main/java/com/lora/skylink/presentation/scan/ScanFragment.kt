@@ -1,6 +1,5 @@
 package com.lora.skylink.presentation.scan
 
-import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.view.View
@@ -15,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.lora.skylink.R
 import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
-import com.lora.skylink.bluetoothlegacy.ConnectionManager
-import com.lora.skylink.bluetoothlegacy.ConnectionManager.isConnected
 import com.lora.skylink.common.loge
 import com.lora.skylink.databinding.FragmentScanBinding
 import com.lora.skylink.presentation.common.PermissionsRequester
@@ -25,7 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@SuppressLint("MissingPermission")
 @AndroidEntryPoint
 class ScanFragment : Fragment(R.layout.fragment_scan) {
 
@@ -38,7 +34,7 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
             if (viewModel.uiState.value.isScanning) {
                 viewModel.stopScanning()
             }
-            connectToBluetoothLowEnergyDevice(result.device)
+            viewModel.connectToDevice(result.device)
         }
     }
 
@@ -55,7 +51,7 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         }
         val onBackCallback = object : OnBackPressedCallback(true ) {
             override fun handleOnBackPressed() {
-                viewModel.checkBluetoothEnabled()  // asks for BTooth if not enabled
+                viewModel.showEnableBluetoothPromptIfDisabled()
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -63,7 +59,7 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         }
 
         binding.btnScanDevices.setOnClickListener {
-            viewModel.checkBluetoothEnabled()
+            viewModel.showEnableBluetoothPromptIfDisabled()
             if (viewModel.uiState.value.isScanning) {
                 viewModel.stopScanning()
             } else {
@@ -84,19 +80,18 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
 
     override fun onResume() {
         super.onResume()
-        ConnectionManager.registerListener(connectionEventListener)
-
-        viewModel.checkBluetoothEnabled()
-
+        viewModel.showEnableBluetoothPromptIfDisabled()
         if(!permissionsRequester.checkAllPermissions()) {
             navigateToPermissionsFragment()
         }
+        viewModel.registerConnectionEventListener(connectionEventListener)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        ConnectionManager.unregisterListener(connectionEventListener)
+        viewModel.unregisterConnectionEventListener(connectionEventListener)
     }
+
 
     private fun setupRecyclerView() {
         binding.scanResultsRecyclerView.apply {
@@ -126,26 +121,12 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         }
     }
 
-    // ToDo
-    // MIGRATE TO BLE CONTROLLER / DATA LAYER
-    private fun connectToBluetoothLowEnergyDevice(device: BluetoothDevice) {
-            loge("Connecting to $device.address")
-            println("FLUGEL - isConnectable: ${device.isConnected()}")
-            if(device.isConnected()) {
-                loge("Navigating to Chat UI... ${device.name}")
-                navigateToChatFragment(device)
-            } else {
-                ConnectionManager.connect(device, context)
-            }
-    }
 
     private val connectionEventListener by lazy {
         ConnectionEventListener().apply {
             onConnectionSetupComplete = { gatt ->
                 loge("Navigating to Chat UI... ${gatt.device.name}")
                 navigateToChatFragment(gatt.device)
-
-                // ConnectionManager.unregisterListener(this)
             }
             onDisconnect = {
                 loge("...DISCONNECTED from Bluetooth LoRa Arduino")

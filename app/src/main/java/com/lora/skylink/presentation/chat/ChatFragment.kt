@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -62,7 +63,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // ConnectionManager.registerListener(connectionEventListener) 99flugel
         super.onViewCreated(view, savedInstanceState)
         loge("onViewCreated")
 
@@ -71,46 +71,18 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         loge("ChatFragment, CONNECTED to: $bluetoothDeviceName")
         Toast.makeText(context, "Connected with: $bluetoothDeviceName", Toast.LENGTH_LONG).show()
 
-        characteristics.forEach {characteristic ->
-            characteristicProperties[characteristic]?.let { properties ->
-                properties.forEachIndexed { _, property ->
-                    loge("UUIID" + characteristic.uuid.toString() + ", properties->" + characteristic.properties)
-                    when (property) {
-                        CharacteristicProperty.Readable -> {
-                            loge("READABLE")
-                        }
-                        CharacteristicProperty.Writable, CharacteristicProperty.WritableWithoutResponse -> {
-                            loge("WRITE_NO_RESPONSE")
-                        }
-                        CharacteristicProperty.Notifiable -> {
-                            loge("NOTIFY and INDICATABLE")
-                            ConnectionManager.enableNotifications(bluetoothDevice!!, characteristic)
-                            bluetoothCharacteristic = characteristic
-                        }
-                        else -> {}
-                    }
-                }
-            }
-        }
 // ==== END BLUETOOTH
         // chatState = buildChatState()
-        binding = FragmentChatBinding.bind(view)
+       // binding = FragmentChatBinding.bind(view)
 
-        setupRecyclerView()
+        //setupRecyclerView()
 
-        binding.buttonSend.setOnClickListener{
-            loge("SEND Pressed")
-            if(binding.inputTextbox.text.toString().isNotEmpty()) {
-                val bytes = binding.inputTextbox.text.toString().toByteArray()
-                loge("Writing to ${bluetoothCharacteristic.uuid}: ${bytes.byteArrayToAsciiString()}")
-                ConnectionManager.writeCharacteristic(
-                    bluetoothDevice!!,
-                    bluetoothCharacteristic,
-                    bytes,
-                )
-            }
-        }
+
+        setupCharacteristics()
+        setupUI(view)
         setupFragmentAdjustmentAccordingToKeyboardVisibility()
+        setupOnBackPressedCallback()
+
     }
 
     override fun onResume() {
@@ -131,6 +103,69 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         bluetoothDevice?.let { ConnectionManager.teardownConnection(it) }
         super.onDestroy()
         loge("ChatFragment  .onDestroy")
+    }
+
+    private fun setupOnBackPressedCallback() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                bluetoothDevice?.let {
+                    ConnectionManager.teardownConnection(it)
+                }
+                isEnabled = false
+               // navigateToScanFragment()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
+    fun setupCharacteristics() {
+        characteristics.forEach { characteristic ->
+            characteristicProperties[characteristic]?.let { properties ->
+                properties.forEachIndexed { _, property ->
+                    loge("UUIID" + characteristic.uuid.toString() + ", properties->" + characteristic.properties)
+                    when (property) {
+                        CharacteristicProperty.Readable -> {
+                            loge("READABLE")
+                        }
+                        CharacteristicProperty.Writable, CharacteristicProperty.WritableWithoutResponse -> {
+                            loge("WRITE_NO_RESPONSE")
+                        }
+                        CharacteristicProperty.Notifiable -> {
+                            loge("NOTIFY and INDICATABLE")
+                            ConnectionManager.enableNotifications(bluetoothDevice!!, characteristic)
+                            bluetoothCharacteristic = characteristic
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
+    private fun setupUI(view: View) {
+        binding = FragmentChatBinding.bind(view)
+        setupRecyclerView()
+
+        binding.buttonSend.setOnClickListener {
+            loge("SEND Pressed")
+            if (binding.inputTextbox.text.toString().isNotEmpty()) {
+                // Changes: Check if bluetoothCharacteristic is initialized
+                if (::bluetoothCharacteristic.isInitialized) {
+                    val bytes = binding.inputTextbox.text.toString().toByteArray()
+                    loge("Writing to ${bluetoothCharacteristic.uuid}: ${bytes.byteArrayToAsciiString()}")
+                    bluetoothDevice?.let {
+                        ConnectionManager.writeCharacteristic(it, bluetoothCharacteristic, bytes)
+                    }
+                } else {
+                    loge("bluetoothCharacteristic is not initialized")
+                    Toast.makeText(context, "Bluetooth characteristic not initialized", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
 
@@ -245,11 +280,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private val connectionEventListener by lazy {
         ConnectionEventListener().apply {
-            onDisconnect = {
+            onDisconnect = {device ->
                 GlobalScope.launch(Dispatchers.Main) {
                     loge("...DISCONNECTED from Bluetooth LoRa Arduino")
                     requireActivity().onBackPressedDispatcher.onBackPressed()
-                    Toast.makeText(context, "The Arduino disconnected", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Arduino ${device.name} is Disconnected", Toast.LENGTH_LONG).show()
                 }
             }
             onConnectionSetupComplete = {
