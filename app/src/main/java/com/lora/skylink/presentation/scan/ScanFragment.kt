@@ -78,6 +78,7 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         }
     }
 
+
     override fun onResume() {
         super.onResume()
         viewModel.showEnableBluetoothPromptIfDisabled()
