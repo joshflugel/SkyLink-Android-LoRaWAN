@@ -12,8 +12,11 @@ sealed class BleOperationType {
 /** Connect to [device] and perform service discovery */
 data class Connect(override val device: BluetoothDevice, val context: Context) : BleOperationType()
 
-/** Disconnect from [device] and release all connection resources */
+/** Disconnect from [device], future reconnection is possible */
 data class Disconnect(override val device: BluetoothDevice) : BleOperationType()
+
+/** Disconnect from [device] and release all connection resources */
+data class DisconnectAndRelease(override val device: BluetoothDevice) : BleOperationType()
 
 /** Write [payload] as the value of a characteristic represented by [characteristicUuid] */
 data class CharacteristicWrite(

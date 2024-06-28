@@ -64,7 +64,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loge("onViewCreated")
+        loge("ChatFragment  .onViewCreated")
 
         bluetoothDevice = args.scanResult
         bluetoothDeviceName = bluetoothDevice!!.name
@@ -91,16 +91,16 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         scrollToNewestMessage()
 
         if(!(permissionsRequester.checkAllPermissions() && isBluetoothAdapterON())) {
-            loge("ScanFragment - SOME PERMISSIONS WERE MISSING, Returning to PermissionsFragment")
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            loge("ChatFragment - SOME PERMISSIONS WERE MISSING, Returning to PermissionsFragment")
+            findNavController().popBackStack()
         }
 
         ConnectionManager.registerListener(connectionEventListener)
-        bluetoothDevice?.let { ConnectionManager.connect(it,context) }
+        //bluetoothDevice?.let { ConnectionManager.connect(it,context) }
     }
     override fun onDestroy() {
         ConnectionManager.unregisterListener(connectionEventListener)
-        bluetoothDevice?.let { ConnectionManager.teardownConnection(it) }
+        //bluetoothDevice?.let { ConnectionManager.teardownConnection(it) }
         super.onDestroy()
         loge("ChatFragment  .onDestroy")
     }
@@ -109,10 +109,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 bluetoothDevice?.let {
-                    ConnectionManager.teardownConnection(it)
+                    //flugel ConnectionManager.teardownConnection(it)
+                    ConnectionManager.disconnectFromDevice(it)
+                } ?: run {
+                    findNavController().popBackStack()
                 }
                 isEnabled = false
                // navigateToScanFragment()
+
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -282,8 +286,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         ConnectionEventListener().apply {
             onDisconnect = {device ->
                 GlobalScope.launch(Dispatchers.Main) {
-                    loge("...DISCONNECTED from Bluetooth LoRa Arduino")
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    loge("...ChatFrag DISCONNECTED from Bluetooth LoRa Arduino")
+                    //requireActivity().onBackPressedDispatcher.onBackPressed()
+                    //navigateToScanFragment()
+                    findNavController().popBackStack()
                     Toast.makeText(context, "Arduino ${device.name} is Disconnected", Toast.LENGTH_LONG).show()
                 }
             }

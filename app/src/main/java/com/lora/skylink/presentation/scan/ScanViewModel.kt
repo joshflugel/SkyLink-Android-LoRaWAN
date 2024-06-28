@@ -1,6 +1,7 @@
 package com.lora.skylink.presentation.scan
 
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.le.ScanResult
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,21 +24,26 @@ class ScanViewModel @Inject constructor(
     private val manageBluetoothDeviceConnectionUseCase: ManageBluetoothDeviceConnectionUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ScanUIState())
+    private var _uiState = MutableStateFlow(ScanUIState())
     val uiState: StateFlow<ScanUIState> = _uiState
 
-    private val _isBluetoothEnabled = MutableLiveData<Boolean>()
+    val isBluetoothEnabled = MutableLiveData<Boolean>()
 
     private var scanJob: Job? = null
     fun startScanning() {
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
+            clearDeviceList()
             _uiState.update { it.copy(isScanning = true) }
             scanBluetoothLeDevicesUseCase.startScanning()
             scanBluetoothLeDevicesUseCase().collect { devices ->
-                _uiState.update { it.copy(scannedDevices = devices) }
+                updateScannedDevices(devices)
             }
         }
+    }
+
+    private fun updateScannedDevices(newDevices: List<ScanResult>) {
+        _uiState.update { it.copy(scannedDevices = newDevices) }
     }
 
     fun stopScanning() {
@@ -45,13 +51,23 @@ class ScanViewModel @Inject constructor(
         viewModelScope.launch {
             scanBluetoothLeDevicesUseCase.stopScanning()
             _uiState.update { it.copy(isScanning = false) }
+            clearDeviceList()
         }
+    }
+
+    fun clearDeviceList() {
+        _uiState.update { it.copy(scannedDevices = emptyList()) }
+        //_uiState = MutableStateFlow(ScanUIState()) ToDo
     }
 
     fun showEnableBluetoothPromptIfDisabled() {
         viewModelScope.launch {
-            _isBluetoothEnabled.value = checkBluetoothEnabledUseCase()
+            isBluetoothEnabled.value = checkBluetoothEnabledUseCase()
         }
+    }
+
+    public fun clearViewModel() {
+        onCleared()
     }
 
     fun connectToDevice(device: BluetoothDevice) {

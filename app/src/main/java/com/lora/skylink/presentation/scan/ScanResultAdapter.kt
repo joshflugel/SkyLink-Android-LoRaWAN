@@ -50,10 +50,11 @@ class ScanResultAdapter(
         private val onItemClick: (ScanResult) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        @SuppressLint("MissingPermission")
+        @SuppressLint("MissingPermission", "SetTextI18n")
         fun bind(scanResult: ScanResult) {
             binding.deviceName.text = scanResult.device.name ?: "Unnamed"
             binding.macAddress.text = scanResult.device.address
+            binding.signalStrength.text = "${scanResult.rssi} dBm"
             binding.root.setOnClickListener { onItemClick(scanResult) }
         }
     }

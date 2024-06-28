@@ -8,6 +8,7 @@ class ItemHolderOutgoingMessage(viewBinding: ItemHolderOutgoingMessageBinding) :
     private val messageText = viewBinding.textMessageOutgoing
     private val timestamp = viewBinding.textTimestampOutgoing
     private val user = viewBinding.textUserOutgoing
+
     @SuppressLint("SetTextI18n")
     fun bindView(message: ChatMessage) {
         messageText.text = message.text
