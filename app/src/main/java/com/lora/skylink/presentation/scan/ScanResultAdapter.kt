@@ -55,7 +55,7 @@ class ScanResultAdapter(
             binding.deviceName.text = scanResult.device.name ?: "Unnamed"
             binding.macAddress.text = scanResult.device.address
             binding.signalStrength.text = "${scanResult.rssi} dBm"
-            binding.root.setOnClickListener { onItemClick(scanResult) }
+            binding.rowRoot.setOnClickListener { onItemClick(scanResult) }
         }
     }
 }

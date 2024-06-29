@@ -34,12 +34,17 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
 
 
     private lateinit var binding: FragmentScanBinding
+
     private val scanResultAdapter: ScanResultAdapter by lazy {
         ScanResultAdapter(mutableListOf()) { result ->
             if (viewModel.uiState.value.isScanning) {
-                viewModel.stopScanning()
+
+
             }
+
+            viewModel.stopScanning()
             viewModel.connectToDevice(result.device)
+
         }
     }
 
