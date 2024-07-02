@@ -36,15 +36,9 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
     private lateinit var binding: FragmentScanBinding
 
     private val scanResultAdapter: ScanResultAdapter by lazy {
-        ScanResultAdapter(mutableListOf()) { result ->
-            if (viewModel.uiState.value.isScanning) {
-
-
-            }
-
+        ScanResultAdapter(mutableListOf()) { device ->
             viewModel.stopScanning()
-            viewModel.connectToDevice(result.device)
-
+            viewModel.connectToDevice(device)
         }
     }
 
@@ -88,6 +82,11 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
                 binding.btnScanDevices.text = if (uiState.isScanning) getString(R.string.stop_scanning)
                 else getString(R.string.start_scanning)
                 scanResultAdapter.submitList(uiState.scannedDevices)
+                printScannedDevicesInLogcat(uiState)
+                val devicesString = uiState.scannedDevices.joinToString(separator = "\n") { it ->
+                    "Name: ${it.name}, MAC Address: ${it.macAddress}, Signal Strength: ${it.signalStrength_dBm}"
+                }
+
             }
         }
 
@@ -96,6 +95,14 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
                 navigateToPermissionsFragment()
             }
         })
+    }
+
+    private fun printScannedDevicesInLogcat(uiState: ScanUIState) {
+        val devicesString = uiState.scannedDevices.joinToString(separator = "\n") { it ->
+            "Name: ${it.name}, MAC Address: ${it.macAddress}, Signal Strength: ${it.signalStrength_dBm}"
+        }
+        loge("List of Devices:\n$devicesString")
+        loge("List of Devices:\n$devicesString")
     }
 
 

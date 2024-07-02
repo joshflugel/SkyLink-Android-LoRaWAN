@@ -7,6 +7,8 @@ import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.lora.skylink.data.model.WirelessDevice
+import com.lora.skylink.util.toWirelessDevice
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -17,8 +19,8 @@ class BluetoothLowEnergyScanController @Inject constructor(
     private val bluetoothAdapter: BluetoothAdapter
 ) {
 
-    private val _scannedDevices = MutableStateFlow<List<ScanResult>>(emptyList())
-    val scannedDevices: StateFlow<List<ScanResult>> = _scannedDevices
+    private val _scannedDevices = MutableStateFlow<List<WirelessDevice>>(emptyList())
+    val scannedDevices: StateFlow<List<WirelessDevice>> = _scannedDevices
 
     private val bleScanner by lazy {
         bluetoothAdapter.bluetoothLeScanner
@@ -29,15 +31,15 @@ class BluetoothLowEnergyScanController @Inject constructor(
         @SuppressLint("MissingPermission")
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             val currentList = _scannedDevices.value.toMutableList()
-            val indexQuery = currentList.indexOfFirst { it.device.address == result.device.address }
+            val indexQuery = currentList.indexOfFirst { it.macAddress == result.device.address }
             if (indexQuery != -1) {result.isConnectable
-                currentList[indexQuery] = result
+                currentList[indexQuery] = result.toWirelessDevice()
             } else {
                 with(result.device) {
                     if(name?.startsWith("LORA")==true) {
                         println("FLUGEL Found BLE ARDUINO device! Name: ${name ?: "Unnamed"}, address: $address")
                         println("FLUGEL - isConnectable: ${result.isConnectable}")
-                        currentList.add(result)
+                        currentList.add(result.toWirelessDevice())
                     }
                 }
             }

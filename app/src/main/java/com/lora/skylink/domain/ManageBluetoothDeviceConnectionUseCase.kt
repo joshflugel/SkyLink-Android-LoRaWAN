@@ -1,18 +1,18 @@
 package com.lora.skylink.domain
 
-import android.bluetooth.BluetoothDevice
 import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
 import com.lora.skylink.data.BluetoothConnectivityRepositoryImpl
+import com.lora.skylink.data.model.WirelessDevice
 import javax.inject.Inject
 
 class ManageBluetoothDeviceConnectionUseCase @Inject constructor(
     private val bluetoothConnectivityRepository: BluetoothConnectivityRepositoryImpl
 ) {
-    fun connectToDevice(device: BluetoothDevice) {
+    fun connectToDevice(device: WirelessDevice) {
         bluetoothConnectivityRepository.connectToDevice(device)
     }
 
-    fun disconnectFromDevice(device: BluetoothDevice) {
+    fun disconnectFromDevice(device: WirelessDevice) {
         bluetoothConnectivityRepository.disconnectFromDevice(device)
     }
 

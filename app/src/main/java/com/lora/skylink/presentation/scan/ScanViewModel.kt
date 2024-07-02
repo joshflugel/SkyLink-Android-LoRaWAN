@@ -1,11 +1,10 @@
 package com.lora.skylink.presentation.scan
 
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.le.ScanResult
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
+import com.lora.skylink.data.model.WirelessDevice
 import com.lora.skylink.domain.CheckBluetoothEnabledUseCase
 import com.lora.skylink.domain.ManageBluetoothDeviceConnectionUseCase
 import com.lora.skylink.domain.ScanBluetoothLowEnergyDevicesUseCase
@@ -44,7 +43,7 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun updateScannedDevices(newDevices: List<ScanResult>) {
+    private fun updateScannedDevices(newDevices: List<WirelessDevice>) {
         _uiState.update { it.copy(scannedDevices = newDevices) }
     }
 
@@ -72,7 +71,7 @@ class ScanViewModel @Inject constructor(
         onCleared()
     }
 
-    fun connectToDevice(device: BluetoothDevice) {
+    fun connectToDevice(device: WirelessDevice) {
         viewModelScope.launch { manageBluetoothDeviceConnectionUseCase.connectToDevice(device) }
     }
 
