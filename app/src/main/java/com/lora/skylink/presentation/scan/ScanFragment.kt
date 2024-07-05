@@ -16,12 +16,11 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.lora.skylink.R
 import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
-import com.lora.skylink.common.loge
 import com.lora.skylink.databinding.FragmentScanBinding
 import com.lora.skylink.presentation.common.PermissionsRequester
+import com.lora.skylink.util.loge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @SuppressLint("MissingPermission")
@@ -29,15 +28,12 @@ import kotlinx.coroutines.launch
 class ScanFragment : Fragment(R.layout.fragment_scan) {
 
     private val viewModel: ScanViewModel by viewModels()
-    // ScanViewModelFactory(requireNotNull(safeArgs.ble)) } // ToDo
     lateinit var permissionsRequester: PermissionsRequester
-
 
     private lateinit var binding: FragmentScanBinding
 
     private val scanResultAdapter: ScanResultAdapter by lazy {
         ScanResultAdapter(mutableListOf()) { device ->
-            viewModel.stopScanning()
             viewModel.connectToDevice(device)
         }
     }
@@ -48,6 +44,7 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         permissionsRequester = PermissionsRequester(this)
         binding = FragmentScanBinding.bind(view)
 
+
         binding.scanFragmentToolbar.setNavigationOnClickListener {
             if (!permissionsRequester.checkAllPermissions() ) {
                 navigateToPermissionsFragment()
@@ -57,7 +54,6 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         }
         val onBackCallback = object : OnBackPressedCallback(true ) {
             override fun handleOnBackPressed() {
-                //viewModel.showEnableBluetoothPromptIfDisabled() // ToDo
                 viewModel.stopScanning()
                 requireActivity().moveTaskToBack(true)
             }
@@ -65,6 +61,7 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         viewLifecycleOwner.lifecycleScope.launch {
             requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackCallback)
         }
+
 
         binding.btnScanDevices.setOnClickListener {
             viewModel.showEnableBluetoothPromptIfDisabled()
@@ -80,13 +77,10 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 binding.btnScanDevices.text = if (uiState.isScanning) getString(R.string.stop_scanning)
-                else getString(R.string.start_scanning)
+                    else getString(R.string.start_scanning)
                 scanResultAdapter.submitList(uiState.scannedDevices)
-                printScannedDevicesInLogcat(uiState)
-                val devicesString = uiState.scannedDevices.joinToString(separator = "\n") { it ->
-                    "Name: ${it.name}, MAC Address: ${it.macAddress}, Signal Strength: ${it.signalStrength_dBm}"
-                }
 
+                printScannedDevicesInLogcat(uiState)
             }
         }
 
@@ -101,7 +95,6 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         val devicesString = uiState.scannedDevices.joinToString(separator = "\n") { it ->
             "Name: ${it.name}, MAC Address: ${it.macAddress}, Signal Strength: ${it.signalStrength_dBm}"
         }
-        loge("List of Devices:\n$devicesString")
         loge("List of Devices:\n$devicesString")
     }
 
@@ -118,16 +111,14 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
 
     override fun onStop() {
         super.onStop()
-        loge("ScanFragment  .onStop")
+        loge("ScanFragment  .onStop, unRegister Listener")
         viewModel.stopScanning()
-        loge("ScanFragment  .unRegsiter Listener")
         viewModel.unregisterConnectionEventListener(connectionEventListener)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         loge("ScanFragment  .onDestroy")
-
     }
 
 
@@ -153,8 +144,7 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         findNavController().navigate(action)
     }
     fun navigateToChatFragment(bluetoothDevice: BluetoothDevice) {
-        viewModel.clearViewModel()
-        GlobalScope.launch(Dispatchers.Main) {
+        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.Main) {
             val action = ScanFragmentDirections.actionScanDestToChatDest(bluetoothDevice)
             findNavController().navigate(action)
         }

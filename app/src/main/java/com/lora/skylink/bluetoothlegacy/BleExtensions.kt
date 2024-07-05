@@ -3,7 +3,7 @@ package com.lora.skylink.bluetoothlegacy
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
-import com.lora.skylink.common.logi
+import com.lora.skylink.util.logi
 import java.util.Locale
 import java.util.UUID
 

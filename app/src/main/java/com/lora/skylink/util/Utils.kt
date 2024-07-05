@@ -1,4 +1,4 @@
-package com.lora.skylink.common
+package com.lora.skylink.util
 
 import android.util.Log
 import androidx.recyclerview.widget.DiffUtil

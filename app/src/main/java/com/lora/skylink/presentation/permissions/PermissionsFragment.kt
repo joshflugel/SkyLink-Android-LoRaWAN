@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.lora.skylink.R
-import com.lora.skylink.common.loge
+import com.lora.skylink.util.loge
 import com.lora.skylink.databinding.FragmentPermissionsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

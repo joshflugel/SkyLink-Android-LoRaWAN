@@ -4,7 +4,7 @@ package com.lora.skylink.data
 import com.lora.skylink.App
 import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
 import com.lora.skylink.bluetoothlegacy.ConnectionManager
-import com.lora.skylink.common.loge
+import com.lora.skylink.util.loge
 import com.lora.skylink.data.model.WirelessDevice
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.domain.IBluetoothConnectivityRepository

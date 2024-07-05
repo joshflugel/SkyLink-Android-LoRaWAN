@@ -20,7 +20,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
+import com.lora.skylink.BuildConfig
 import com.lora.skylink.R
 import com.lora.skylink.bluetoothlegacy.CharacteristicProperty
 import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
@@ -31,17 +31,18 @@ import com.lora.skylink.bluetoothlegacy.isNotifiable
 import com.lora.skylink.bluetoothlegacy.isReadable
 import com.lora.skylink.bluetoothlegacy.isWritable
 import com.lora.skylink.bluetoothlegacy.isWritableWithoutResponse
-import com.lora.skylink.common.DateUtil
-import com.lora.skylink.common.logd
-import com.lora.skylink.common.loge
-import com.lora.skylink.common.logi
 import com.lora.skylink.databinding.FragmentChatBinding
 import com.lora.skylink.presentation.common.PermissionsRequesterLEGACY
+import com.lora.skylink.util.DateUtil
+import com.lora.skylink.util.logd
+import com.lora.skylink.util.loge
+import com.lora.skylink.util.logi
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+//import com.lora.skylink.BuildConfig
 
 @AndroidEntryPoint
 class ChatFragment : Fragment(R.layout.fragment_chat) {
@@ -98,11 +99,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
         ConnectionManager.registerListener(connectionEventListener)
-        //bluetoothDevice?.let { ConnectionManager.connect(it,context) }
     }
     override fun onDestroy() {
         ConnectionManager.unregisterListener(connectionEventListener)
-        //bluetoothDevice?.let { ConnectionManager.teardownConnection(it) }
         super.onDestroy()
         loge("ChatFragment  .onDestroy")
     }
@@ -111,13 +110,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 bluetoothDevice?.let {
-                    //flugel ConnectionManager.teardownConnection(it)
                     ConnectionManager.disconnectFromDevice(it)
                 } ?: run {
                     findNavController().popBackStack()
                 }
                 isEnabled = false
-               // navigateToScanFragment()
 
             }
         }
@@ -156,7 +153,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         binding = FragmentChatBinding.bind(view)
 
         // CUustom Easter egg
-        if(Build.MODEL.equals("SM-A546B")) {
+        if(Build.MODEL.equals("SM-A546B") && BuildConfig.DEBUG) {
                 binding.imgHeaderChat.setImageResource(R.drawable.erc_minilink_rural)
         }
 
