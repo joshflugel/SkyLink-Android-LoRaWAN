@@ -15,11 +15,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import android.os.Looper
-import com.lora.skylink.common.logd
-import com.lora.skylink.common.loge
-import com.lora.skylink.common.logi
-import com.lora.skylink.common.logv
-import com.lora.skylink.common.logw
+import com.lora.skylink.util.logd
+import com.lora.skylink.util.loge
+import com.lora.skylink.util.logi
+import com.lora.skylink.util.logv
+import com.lora.skylink.util.logw
 import java.lang.ref.WeakReference
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -227,7 +227,7 @@ object ConnectionManager {
         }
 
 // Check BluetoothGatt availability for other operations
-        var gatt: BluetoothGatt? = deviceGattMap[operation.device]
+        val gatt: BluetoothGatt = deviceGattMap[operation.device]
             ?: this@ConnectionManager.run {
                 loge("Not connected to ${operation.device.address}! Aborting $operation operation.")
                 signalEndOfOperation()
@@ -239,62 +239,62 @@ object ConnectionManager {
         when (operation) {
             is Disconnect -> with(operation) {
                 logw("Disconnecting from ${device.address}")
-                gatt?.disconnect()
-                gatt?.close()
+                gatt.disconnect()
+                gatt.close()
                 deviceGattMap.remove(device)
                 listeners.forEach { it.get()?.onDisconnect?.invoke(device) }
                 signalEndOfOperation()
             }
             is DisconnectAndRelease -> with(operation) {
                 logw("Disconnecting and RELEASE from ${device.address}")
-                if (gatt?.device?.isConnected() == true) {
+                if (gatt.device?.isConnected() == true) {
                     logw("...disconnecting Device first.")
-                    gatt?.disconnect()
+                    gatt.disconnect()
                 } else {
                     // Not connected
                 }
-                gatt?.close()
+                gatt.close()
                 deviceGattMap.remove(device)
                 listeners.forEach { it.get()?.onDisconnect?.invoke(device) }
                 signalEndOfOperation()
             }
             is CharacteristicWrite -> with(operation) {
-                gatt?.findCharacteristic(characteristicUuid)?.let { characteristic ->
+                gatt.findCharacteristic(characteristicUuid)?.let { characteristic ->
                     characteristic.writeType = writeType
                     characteristic.value = payload
-                    gatt?.writeCharacteristic(characteristic)
+                    gatt.writeCharacteristic(characteristic)
                 } ?: this@ConnectionManager.run {
                     loge("Cannot find $characteristicUuid to write to")
                     signalEndOfOperation()
                 }
             }
             is CharacteristicRead -> with(operation) {
-                gatt?.findCharacteristic(characteristicUuid)?.let { characteristic ->
-                    gatt?.readCharacteristic(characteristic)
+                gatt.findCharacteristic(characteristicUuid)?.let { characteristic ->
+                    gatt.readCharacteristic(characteristic)
                 } ?: this@ConnectionManager.run {
                     loge("Cannot find $characteristicUuid to read from")
                     signalEndOfOperation()
                 }
             }
             is DescriptorWrite -> with(operation) {
-                gatt?.findDescriptor(descriptorUuid)?.let { descriptor ->
+                gatt.findDescriptor(descriptorUuid)?.let { descriptor ->
                     descriptor.value = payload
-                    gatt?.writeDescriptor(descriptor)
+                    gatt.writeDescriptor(descriptor)
                 } ?: this@ConnectionManager.run {
                     loge("Cannot find $descriptorUuid to write to")
                     signalEndOfOperation()
                 }
             }
             is DescriptorRead -> with(operation) {
-                gatt?.findDescriptor(descriptorUuid)?.let { descriptor ->
-                    gatt?.readDescriptor(descriptor)
+                gatt.findDescriptor(descriptorUuid)?.let { descriptor ->
+                    gatt.readDescriptor(descriptor)
                 } ?: this@ConnectionManager.run {
                     loge("Cannot find $descriptorUuid to read from")
                     signalEndOfOperation()
                 }
             }
             is EnableNotifications -> with(operation) {
-                gatt?.findCharacteristic(characteristicUuid)?.let { characteristic ->
+                gatt.findCharacteristic(characteristicUuid)?.let { characteristic ->
                     val cccdUuid = UUID.fromString(CCC_DESCRIPTOR_UUID)
                     val payload = when {
                         characteristic.isIndicatable() ->
@@ -306,14 +306,14 @@ object ConnectionManager {
                     }
 
                     characteristic.getDescriptor(cccdUuid)?.let { cccDescriptor ->
-                        if (!gatt?.setCharacteristicNotification(characteristic, true)!!) {
+                        if (!gatt.setCharacteristicNotification(characteristic, true)!!) {
                             loge("setCharacteristicNotification failed for ${characteristic.uuid}")
                             signalEndOfOperation()
                             return
                         }
 
                         cccDescriptor.value = payload
-                        gatt?.writeDescriptor(cccDescriptor)
+                        gatt.writeDescriptor(cccDescriptor)
                     } ?: this@ConnectionManager.run {
                         loge("${characteristic.uuid} doesn't contain the CCC descriptor!")
                         loge("cccdUuid: ${cccdUuid}")
@@ -325,17 +325,17 @@ object ConnectionManager {
                 }
             }
             is DisableNotifications -> with(operation) {
-                gatt?.findCharacteristic(characteristicUuid)?.let { characteristic ->
+                gatt.findCharacteristic(characteristicUuid)?.let { characteristic ->
                     val cccdUuid = UUID.fromString(CCC_DESCRIPTOR_UUID)
                     characteristic.getDescriptor(cccdUuid)?.let { cccDescriptor ->
-                        if (!gatt?.setCharacteristicNotification(characteristic, false)!!) {
+                        if (!gatt.setCharacteristicNotification(characteristic, false)) {
                             loge("setCharacteristicNotification failed for ${characteristic.uuid}")
                             signalEndOfOperation()
                             return
                         }
 
                         cccDescriptor.value = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
-                        gatt?.writeDescriptor(cccDescriptor)
+                        gatt.writeDescriptor(cccDescriptor)
                     } ?: this@ConnectionManager.run {
                         loge("${characteristic.uuid} doesn't contain the CCC descriptor!")
                         signalEndOfOperation()
@@ -346,7 +346,7 @@ object ConnectionManager {
                 }
             }
             is MtuRequest -> with(operation) {
-                gatt?.requestMtu(mtu)
+                gatt.requestMtu(mtu)
             }
 
             is Connect -> TODO()
@@ -436,7 +436,7 @@ object ConnectionManager {
             characteristic: BluetoothGattCharacteristic,
             status: Int
         ) {
-            if (gatt?.device?.isConnected() == true) {
+            if (gatt.device?.isConnected() == true) {
                 loge("GATT CONNECTED - OK !!")
             } else {
                 loge("GATT DISCONNECTED - ERROR !!")

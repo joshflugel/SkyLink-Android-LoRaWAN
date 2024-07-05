@@ -1,11 +1,11 @@
 package com.lora.skylink.domain
 
-import android.bluetooth.le.ScanResult
+import com.lora.skylink.data.model.WirelessDevice
 import kotlinx.coroutines.flow.StateFlow
 
 interface IBluetoothLowEnergyRepository {
 
-    val scannedDevices: StateFlow<List<ScanResult>>
+    val scannedDevices: StateFlow<List<WirelessDevice>>
     fun startBleScan()
     fun stopBleScan()
     fun isBluetoothAdapterEnabled(): Boolean

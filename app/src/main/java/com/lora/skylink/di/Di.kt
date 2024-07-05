@@ -8,6 +8,8 @@ import com.lora.skylink.data.BluetoothConnectivityRepositoryImpl
 import com.lora.skylink.data.BluetoothLowEnergyRepositoryImpl
 import com.lora.skylink.data.bluetoothLowEnergy.BluetoothAdapterManager
 import com.lora.skylink.data.bluetoothLowEnergy.BluetoothLowEnergyScanController
+import com.lora.skylink.domain.BluetoothDeviceConverter
+import com.lora.skylink.domain.BluetoothDeviceConverterImpl
 import com.lora.skylink.domain.IBluetoothConnectivityRepository
 import com.lora.skylink.domain.IBluetoothLowEnergyRepository
 import dagger.Module
@@ -30,7 +32,6 @@ object Di{
         return bluetoothManager.adapter
     }
 
-
     @Provides
     @Singleton
     fun provideBluetoothRepository(
@@ -38,17 +39,22 @@ object Di{
         bleManager: BluetoothAdapterManager
     ): IBluetoothLowEnergyRepository = BluetoothLowEnergyRepositoryImpl(bleScanController, bleManager)
 
+    @Provides
+    @Singleton
+    fun provideBluetoothConnectivityRepository(
+        deviceConverter: BluetoothDeviceConverter
+    ): IBluetoothConnectivityRepository = BluetoothConnectivityRepositoryImpl(deviceConverter)
 
     @Provides
     @Singleton
-    fun provideBluetoothConnectivityRepository(): IBluetoothConnectivityRepository = BluetoothConnectivityRepositoryImpl()
-
+    fun provideBluetoothDeviceConverter(
+        bluetoothAdapter: BluetoothAdapter
+    ): BluetoothDeviceConverter = BluetoothDeviceConverterImpl(bluetoothAdapter)
 
     /*
     @Provides
     fun providePermissionsRequester(fragment: Fragment): PermissionsRequester {
         return PermissionsRequester(fragment)
     }
-
-     */
+    */
 }

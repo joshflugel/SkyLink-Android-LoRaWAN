@@ -1,11 +1,10 @@
 package com.lora.skylink.presentation.scan
 
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.le.ScanResult
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
+import com.lora.skylink.data.model.WirelessDevice
 import com.lora.skylink.domain.CheckBluetoothEnabledUseCase
 import com.lora.skylink.domain.ManageBluetoothDeviceConnectionUseCase
 import com.lora.skylink.domain.ScanBluetoothLowEnergyDevicesUseCase
@@ -30,36 +29,28 @@ class ScanViewModel @Inject constructor(
 
     val isBluetoothEnabled = MutableLiveData<Boolean>()
 
+
     private var scanJob: Job? = null
     fun startScanning() {
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
-            clearDeviceList()
-            _uiState.update { it.copy(isScanning = true) }
+            _uiState.update { it.copy(isScanning = true, scannedDevices = emptyList()) }
             scanBluetoothLeDevicesUseCase.startScanning()
             val defaultScanSamplingMilliseconds = 1000L
+
             scanBluetoothLeDevicesUseCase().sample(defaultScanSamplingMilliseconds).collect { devices ->
-                updateScannedDevices(devices)
+                _uiState.update { it.copy(scannedDevices = devices) }
             }
         }
     }
 
-    private fun updateScannedDevices(newDevices: List<ScanResult>) {
-        _uiState.update { it.copy(scannedDevices = newDevices) }
-    }
-
     fun stopScanning() {
         scanJob?.cancel()
+
         viewModelScope.launch {
             scanBluetoothLeDevicesUseCase.stopScanning()
-            _uiState.update { it.copy(isScanning = false) }
-            clearDeviceList()
+            _uiState.update { it.copy(isScanning = false, scannedDevices = emptyList()) }
         }
-    }
-
-    fun clearDeviceList() {
-        _uiState.update { it.copy(scannedDevices = emptyList()) }
-        //_uiState = MutableStateFlow(ScanUIState()) ToDo
     }
 
     fun showEnableBluetoothPromptIfDisabled() {
@@ -68,11 +59,8 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    public fun clearViewModel() {
-        onCleared()
-    }
-
-    fun connectToDevice(device: BluetoothDevice) {
+    fun connectToDevice(device: WirelessDevice) {
+        stopScanning()
         viewModelScope.launch { manageBluetoothDeviceConnectionUseCase.connectToDevice(device) }
     }
 

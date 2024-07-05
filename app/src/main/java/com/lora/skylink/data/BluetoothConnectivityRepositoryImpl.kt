@@ -1,33 +1,43 @@
 package com.lora.skylink.data
 
 
-import android.bluetooth.BluetoothDevice
 import com.lora.skylink.App
 import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
 import com.lora.skylink.bluetoothlegacy.ConnectionManager
-import com.lora.skylink.common.loge
+import com.lora.skylink.util.loge
+import com.lora.skylink.data.model.WirelessDevice
+import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.domain.IBluetoothConnectivityRepository
 import javax.inject.Inject
 
 
 class BluetoothConnectivityRepositoryImpl @Inject constructor(
-   // @ApplicationContext private val context: Context
+    private val deviceConverter: BluetoothDeviceConverter
 ) : IBluetoothConnectivityRepository {
         private val connectionEventListener = ConnectionEventListener()
 
-        override fun connectToDevice(device: BluetoothDevice) {
+        override fun connectToDevice(device: WirelessDevice) {
             loge("BT Repo connectToDevice")
-            ConnectionManager.connect(device, App.applicationContext())
+            val bluetoothDevice = deviceConverter.toBluetoothDevice(device)
+            bluetoothDevice?.let {
+                ConnectionManager.connect(it, App.applicationContext())
+            }
         }
 
-        override fun disconnectFromDevice(device: BluetoothDevice) {
+        override fun disconnectFromDevice(device: WirelessDevice) {
             loge("BT Repo DisconnectFromDevice")
-            ConnectionManager.disconnectFromDevice(device)
+            val bluetoothDevice = deviceConverter.toBluetoothDevice(device)
+            bluetoothDevice?.let {
+                ConnectionManager.disconnectFromDevice(it)
+            }
         }
 
-        override fun teardownConnection(device: BluetoothDevice) {
+        override fun teardownConnection(device: WirelessDevice) {
             loge("BT Repo Teardown")
-            ConnectionManager.disconnectFromDevice(device)
+            val bluetoothDevice = deviceConverter.toBluetoothDevice(device)
+            bluetoothDevice?.let {
+                ConnectionManager.disconnectFromDeviceAndReleaseResources(it)
+            }
         }
 
         override fun registerConnectionEventListener(listener: ConnectionEventListener) {

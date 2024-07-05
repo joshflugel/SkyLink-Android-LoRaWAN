@@ -1,4 +1,4 @@
-package com.lora.skylink.common
+package com.lora.skylink.util
 
 import java.text.SimpleDateFormat
 import java.util.Locale

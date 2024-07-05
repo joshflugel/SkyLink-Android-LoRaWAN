@@ -1,7 +1,7 @@
 package com.lora.skylink.domain
 
-import android.bluetooth.le.ScanResult
 import com.lora.skylink.data.BluetoothLowEnergyRepositoryImpl
+import com.lora.skylink.data.model.WirelessDevice
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ class ScanBluetoothLowEnergyDevicesUseCase @Inject constructor(
      repository.startBleScan()
     }
     fun stopScanning() = repository.stopBleScan()
-    operator fun invoke(): StateFlow<List<ScanResult>> {
+    operator fun invoke(): StateFlow<List<WirelessDevice>> {
         return repository.scannedDevices
     }
 }

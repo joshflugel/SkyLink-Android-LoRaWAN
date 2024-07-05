@@ -1,17 +1,9 @@
 package com.lora.skylink.presentation.scan
 
-import android.bluetooth.le.ScanResult
 import androidx.fragment.app.Fragment
-
-fun Fragment.buildScanUIState(
-    scannedDevices: List<ScanResult> = emptyList(),
-    isScanning: Boolean = false
-) = ScanUIState(
-    scannedDevices = scannedDevices,
-    isScanning = isScanning
-)
+import com.lora.skylink.data.model.WirelessDevice
 
 data class ScanUIState (
-    val scannedDevices: List<ScanResult> = emptyList(),
+    val scannedDevices: List<WirelessDevice> = emptyList(),
     val isScanning: Boolean = false
 )
