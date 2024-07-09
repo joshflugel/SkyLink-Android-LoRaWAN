@@ -1,4 +1,4 @@
-package com.lora.skylink.data.bluetoothLowEnergy
+package com.lora.skylink.data.remote.bluetooth
 
 import android.bluetooth.BluetoothAdapter
 import javax.inject.Inject

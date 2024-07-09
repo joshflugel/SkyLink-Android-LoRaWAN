@@ -1,10 +1,9 @@
 package com.lora.skylink.domain
 
-import com.lora.skylink.data.BluetoothLowEnergyRepositoryImpl
 import javax.inject.Inject
 
 class CheckBluetoothEnabledUseCase @Inject constructor(
-    private val bleRepository: BluetoothLowEnergyRepositoryImpl
+    private val bleRepository: IBluetoothLowEnergyRepository
 ) {
     operator fun invoke(): Boolean {
         return bleRepository.isBluetoothAdapterEnabled()

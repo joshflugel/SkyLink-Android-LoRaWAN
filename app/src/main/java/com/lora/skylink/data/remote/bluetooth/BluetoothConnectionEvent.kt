@@ -1,4 +1,4 @@
-package com.lora.skylink.data.bluetooth
+package com.lora.skylink.data.remote.bluetooth
 
 
 import android.bluetooth.BluetoothDevice

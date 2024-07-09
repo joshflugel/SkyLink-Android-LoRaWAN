@@ -4,10 +4,10 @@ package com.lora.skylink.di
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import com.lora.skylink.data.BluetoothConnectivityRepositoryImpl
-import com.lora.skylink.data.BluetoothLowEnergyRepositoryImpl
-import com.lora.skylink.data.bluetoothLowEnergy.BluetoothAdapterManager
-import com.lora.skylink.data.bluetoothLowEnergy.BluetoothLowEnergyScanController
+import com.lora.skylink.data.repositories.BluetoothConnectivityRepositoryImpl
+import com.lora.skylink.data.repositories.BluetoothLowEnergyRepositoryImpl
+import com.lora.skylink.data.remote.bluetooth.BluetoothAdapterManager
+import com.lora.skylink.data.remote.bluetooth.BluetoothLowEnergyScanController
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.domain.BluetoothDeviceConverterImpl
 import com.lora.skylink.domain.IBluetoothConnectivityRepository
@@ -34,10 +34,9 @@ object Di{
 
     @Provides
     @Singleton
-    fun provideBluetoothRepository(
-        bleScanController: BluetoothLowEnergyScanController,
-        bleManager: BluetoothAdapterManager
-    ): IBluetoothLowEnergyRepository = BluetoothLowEnergyRepositoryImpl(bleScanController, bleManager)
+    fun provideBluetoothDeviceConverter(
+        bluetoothAdapter: BluetoothAdapter
+    ): BluetoothDeviceConverter = BluetoothDeviceConverterImpl(bluetoothAdapter)
 
     @Provides
     @Singleton
@@ -47,9 +46,13 @@ object Di{
 
     @Provides
     @Singleton
-    fun provideBluetoothDeviceConverter(
-        bluetoothAdapter: BluetoothAdapter
-    ): BluetoothDeviceConverter = BluetoothDeviceConverterImpl(bluetoothAdapter)
+    fun provideBluetoothLowEnergyRepository(
+        bleScanController: BluetoothLowEnergyScanController,
+        bleManager: BluetoothAdapterManager
+    ): IBluetoothLowEnergyRepository = BluetoothLowEnergyRepositoryImpl(bleScanController, bleManager)
+
+
+
 
     /*
     @Provides
