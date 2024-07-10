@@ -4,14 +4,16 @@ package com.lora.skylink.di
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import com.lora.skylink.data.repositories.BluetoothConnectivityRepositoryImpl
-import com.lora.skylink.data.repositories.BluetoothLowEnergyRepositoryImpl
 import com.lora.skylink.data.remote.bluetooth.BluetoothAdapterManager
 import com.lora.skylink.data.remote.bluetooth.BluetoothLowEnergyScanController
+import com.lora.skylink.data.repositories.BluetoothConnectivityRepositoryImpl
+import com.lora.skylink.data.repositories.BluetoothLowEnergyRepositoryImpl
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.domain.BluetoothDeviceConverterImpl
 import com.lora.skylink.domain.IBluetoothConnectivityRepository
 import com.lora.skylink.domain.IBluetoothLowEnergyRepository
+import com.lora.skylink.util.AppLogger
+import com.lora.skylink.util.Logger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,7 +53,9 @@ object Di{
         bleManager: BluetoothAdapterManager
     ): IBluetoothLowEnergyRepository = BluetoothLowEnergyRepositoryImpl(bleScanController, bleManager)
 
-
+    @Provides
+    @Singleton
+    fun provideLogger(): Logger = AppLogger
 
 
     /*

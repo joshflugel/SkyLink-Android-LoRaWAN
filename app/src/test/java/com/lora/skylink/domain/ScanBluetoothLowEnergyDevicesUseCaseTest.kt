@@ -39,6 +39,7 @@ class ScanBluetoothLowEnergyDevicesUseCaseTest {
     @Test
     fun `stopScanning should call stopBleScan on repository`() {
         justRun { repository.stopBleScan() }
+        repository.stopBleScan()
 
         useCase.stopScanning()
 
@@ -46,7 +47,7 @@ class ScanBluetoothLowEnergyDevicesUseCaseTest {
     }
 
     @Test
-    fun `invoke should return scannedDevices from repository`() {
+    fun `use case invoke should return scannedDevices from repository`() {
         val device1 = WirelessDevice(name = "Device1", macAddress = "00:11:22:33:44:55", signalStrength_dBm = -50)
         val device2 = WirelessDevice(name = "Device2", macAddress = "66:77:88:99:AA:BB", signalStrength_dBm = -60)
 

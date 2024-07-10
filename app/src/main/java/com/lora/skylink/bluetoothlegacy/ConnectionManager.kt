@@ -15,11 +15,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import android.os.Looper
-import com.lora.skylink.util.logd
-import com.lora.skylink.util.loge
+import com.lora.skylink.util.AppLogger
+import com.lora.skylink.util.AppLogger.logd
+import com.lora.skylink.util.AppLogger.loge
+import com.lora.skylink.util.AppLogger.logw
+import com.lora.skylink.util.Logger
 import com.lora.skylink.util.logi
 import com.lora.skylink.util.logv
-import com.lora.skylink.util.logw
 import java.lang.ref.WeakReference
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -29,13 +31,21 @@ import java.util.concurrent.ConcurrentLinkedQueue
 private const val GATT_MIN_MTU_SIZE = 23
 /** Maximum BLE MTU size as defined in gatt_api.h. */
 private const val GATT_MAX_MTU_SIZE = 517
+
+// Remember constructors are not allowed for objects, so Injection is different, happens in App class
 object ConnectionManager {
+
+    private var logger: Logger = AppLogger
 
     private var listeners: MutableSet<WeakReference<ConnectionEventListener>> = mutableSetOf()
 
     private val deviceGattMap = ConcurrentHashMap<BluetoothDevice, BluetoothGatt>()
     private val operationQueue = ConcurrentLinkedQueue<BleOperationType>()
     private var pendingOperation: BleOperationType? = null
+
+    fun initialize(logger: Logger) {
+        this.logger = logger
+    }
 
     fun servicesOnDevice(device: BluetoothDevice): List<BluetoothGattService>? =
         deviceGattMap[device]?.services

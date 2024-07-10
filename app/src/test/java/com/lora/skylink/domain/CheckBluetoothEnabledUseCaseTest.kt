@@ -22,7 +22,7 @@ class CheckBluetoothEnabledUseCaseTest {
     }
 
     @Test
-    fun useCaseShouldReturnTrueWhenBluetoothIsEnabled() {
+    fun `useCase should return true when Bluetooth is enabled`() {
         every { bleRepository.isBluetoothAdapterEnabled() } returns true
 
         val result = checkBluetoothEnabledUseCase()
@@ -32,7 +32,7 @@ class CheckBluetoothEnabledUseCaseTest {
     }
 
     @Test
-    fun useCaseShouldReturnFalseWhenBluetoothIsdisabled() {
+    fun `useCase should return false when Bluetooth is disabled`() {
         every { bleRepository.isBluetoothAdapterEnabled() } returns false
 
         val result = checkBluetoothEnabledUseCase()

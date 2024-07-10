@@ -2,6 +2,8 @@ package com.lora.skylink
 
 import android.app.Application
 import android.content.Context
+import com.lora.skylink.bluetoothlegacy.ConnectionManager
+import com.lora.skylink.util.AppLogger
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -22,5 +24,6 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         val context: Context = App.applicationContext()
+        ConnectionManager.initialize(AppLogger)
     }
 }

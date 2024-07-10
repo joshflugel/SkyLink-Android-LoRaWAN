@@ -7,27 +7,36 @@ import com.lora.skylink.bluetoothlegacy.ConnectionManager
 import com.lora.skylink.data.model.WirelessDevice
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.domain.IBluetoothConnectivityRepository
-import com.lora.skylink.util.loge
+import com.lora.skylink.util.AppLogger
+import com.lora.skylink.util.AppLogger.loge
+import com.lora.skylink.util.AppLogger.logi
+import com.lora.skylink.util.Logger
 import javax.inject.Inject
 
 
 class BluetoothConnectivityRepositoryImpl @Inject constructor(
-    private val deviceConverter: BluetoothDeviceConverter
+    private val deviceConverter: BluetoothDeviceConverter,
+    private val logger: Logger = AppLogger
 ) : IBluetoothConnectivityRepository {
 
+        @Inject
+        lateinit var connectionManager: ConnectionManager
+
         override fun connectToDevice(device: WirelessDevice) {
-            loge("BT Repo connectToDevice")
+            logi("BT Repo connectToDevice")
             val bluetoothDevice = deviceConverter.toBluetoothDevice(device)
+            val context = App.applicationContext()
+
             bluetoothDevice?.let {
-                ConnectionManager.connect(it, App.applicationContext())
+                connectionManager.connect(it, context)
             }
         }
 
         override fun disconnectFromDevice(device: WirelessDevice) {
-            loge("BT Repo DisconnectFromDevice")
+            logi("BT Repo DisconnectFromDevice")
             val bluetoothDevice = deviceConverter.toBluetoothDevice(device)
             bluetoothDevice?.let {
-                ConnectionManager.disconnectFromDevice(it)
+                connectionManager.disconnectFromDevice(it)
             }
         }
 
@@ -35,17 +44,17 @@ class BluetoothConnectivityRepositoryImpl @Inject constructor(
             loge("BT Repo Teardown")
             val bluetoothDevice = deviceConverter.toBluetoothDevice(device)
             bluetoothDevice?.let {
-                ConnectionManager.disconnectFromDeviceAndReleaseResources(it)
+                connectionManager.disconnectFromDeviceAndReleaseResources(it)
             }
         }
 
         override fun registerConnectionEventListener(listener: ConnectionEventListener) {
-            loge("BT Repo REGISTER ConnectionEventListener")
-            ConnectionManager.registerListener(listener)
+            logi("BT Repo REGISTER ConnectionEventListener")
+            connectionManager.registerListener(listener)
         }
 
         override fun unregisterConnectionEventListener(listener: ConnectionEventListener) {
-            loge("BT Repo UNREGISTER ConnectionEventListener")
-            ConnectionManager.unregisterListener(listener)
+            logi("BT Repo UNREGISTER ConnectionEventListener")
+            connectionManager.unregisterListener(listener)
         }
     }

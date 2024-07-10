@@ -21,13 +21,13 @@ class ManageBluetoothDeviceConnectionUseCaseTest {
     }
 
     @Test
-    fun connectToDeviceShouldCallRepositoryConnectMethod() {
+    fun `connectToDevice should call repository connect method`() {
         manageBluetoothDeviceConnectionUseCase.connectToDevice(device)
         verify { bluetoothConnectivityRepository.connectToDevice(device) }
     }
 
     @Test
-    fun disconnectFromDevice() {
+    fun `disconnectFromDevice should call repository disconnect method`() {
         manageBluetoothDeviceConnectionUseCase.disconnectFromDevice((device))
         verify {bluetoothConnectivityRepository.disconnectFromDevice(device) }
     }
