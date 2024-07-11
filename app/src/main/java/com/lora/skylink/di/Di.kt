@@ -6,7 +6,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import com.lora.skylink.data.remote.bluetooth.BluetoothAdapterManager
 import com.lora.skylink.data.remote.bluetooth.BluetoothLowEnergyScanController
-import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionManager
+import com.lora.skylink.data.remote.bluetoothlowenergy.BleConnectionManager
 import com.lora.skylink.data.repositories.BluetoothConnectivityRepositoryImpl
 import com.lora.skylink.data.repositories.BluetoothLowEnergyRepositoryImpl
 import com.lora.skylink.domain.BluetoothDeviceConverter
@@ -47,17 +47,17 @@ object Di{
     fun provideConnectionManager(
         @ApplicationContext context: Context,
         bluetoothAdapter: BluetoothAdapter
-    ): ConnectionManager {
-        return ConnectionManager(context, bluetoothAdapter)
+    ): BleConnectionManager {
+        return BleConnectionManager(context, bluetoothAdapter)
     }
 
     @Provides
     @Singleton
     fun provideBluetoothConnectivityRepository(
         deviceConverter: BluetoothDeviceConverter,
-        connectionManager: ConnectionManager
+        bleConnectionManager: BleConnectionManager
     ): IBluetoothConnectivityRepository {
-        return BluetoothConnectivityRepositoryImpl(deviceConverter, connectionManager)
+        return BluetoothConnectivityRepositoryImpl(deviceConverter, bleConnectionManager)
     }
 
 

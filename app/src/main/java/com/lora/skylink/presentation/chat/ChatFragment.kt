@@ -24,7 +24,7 @@ import com.lora.skylink.BuildConfig
 import com.lora.skylink.R
 import com.lora.skylink.data.remote.bluetoothlowenergy.CharacteristicProperty
 import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
-import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionManager
+import com.lora.skylink.data.remote.bluetoothlowenergy.BleConnectionManager
 import com.lora.skylink.data.remote.bluetoothlowenergy.byteArrayToAsciiString
 import com.lora.skylink.data.remote.bluetoothlowenergy.isIndicatable
 import com.lora.skylink.data.remote.bluetoothlowenergy.isNotifiable
@@ -56,7 +56,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private lateinit var binding: FragmentChatBinding
 
-    @Inject lateinit var connectionManager: ConnectionManager
+    @Inject lateinit var bleConnectionManager: BleConnectionManager
 
     private var bluetoothDevice
     : BluetoothDevice? = null
@@ -96,10 +96,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             findNavController().popBackStack()
         }
 
-        connectionManager.registerListener(connectionEventListener)
+        bleConnectionManager.registerListener(connectionEventListener)
     }
     override fun onDestroy() {
-        connectionManager.unregisterListener(connectionEventListener)
+        bleConnectionManager.unregisterListener(connectionEventListener)
         super.onDestroy()
         loge("ChatFragment  .onDestroy")
     }
@@ -108,7 +108,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 bluetoothDevice?.let {
-                    connectionManager.disconnectFromDevice(it)
+                    bleConnectionManager.disconnectFromDevice(it)
                 } ?: run {
                     findNavController().popBackStack()
                 }
@@ -133,7 +133,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                         }
                         CharacteristicProperty.Notifiable -> {
                             loge("NOTIFY and INDICATABLE")
-                            connectionManager.enableNotifications(bluetoothDevice!!, characteristic)
+                            bleConnectionManager.enableNotifications(bluetoothDevice!!, characteristic)
                             bluetoothCharacteristic = characteristic
                         }
                         else -> {}
@@ -165,7 +165,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     val bytes = binding.inputTextbox.text.toString().toByteArray()
                     loge("Writing to ${bluetoothCharacteristic.uuid}: ${bytes.byteArrayToAsciiString()}")
                     bluetoothDevice?.let {
-                        connectionManager.writeCharacteristic(it, bluetoothCharacteristic, bytes)
+                        bleConnectionManager.writeCharacteristic(it, bluetoothCharacteristic, bytes)
                     }
                 } else {
                     loge("bluetoothCharacteristic is not initialized")
@@ -262,7 +262,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     /////// BLUETOOTH COMMS
     private val characteristics by lazy {
         bluetoothDevice?.let {
-            connectionManager.servicesOnDevice(it)?.flatMap { service ->
+            bleConnectionManager.servicesOnDevice(it)?.flatMap { service ->
                 service.characteristics ?: listOf()
             }
         } ?: listOf()

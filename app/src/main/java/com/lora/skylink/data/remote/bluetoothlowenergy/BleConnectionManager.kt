@@ -33,7 +33,7 @@ private const val GATT_MIN_MTU_SIZE = 23
 private const val GATT_MAX_MTU_SIZE = 517
 
 // Remember constructors are not allowed for objects, so Injection is different, happens in App class
-class ConnectionManager @Inject constructor(
+class BleConnectionManager @Inject constructor(
     private val context: Context,
     private val bluetoothAdapter: BluetoothAdapter
 ) {
@@ -236,7 +236,7 @@ class ConnectionManager @Inject constructor(
 
 // Check BluetoothGatt availability for other operations
         val gatt: BluetoothGatt = deviceGattMap[operation.device]
-            ?: this@ConnectionManager.run {
+            ?: this@BleConnectionManager.run {
                 loge("Not connected to ${operation.device.address}! Aborting $operation operation.")
                 signalEndOfOperation()
                 return
@@ -271,7 +271,7 @@ class ConnectionManager @Inject constructor(
                     characteristic.writeType = writeType
                     characteristic.value = payload
                     gatt.writeCharacteristic(characteristic)
-                } ?: this@ConnectionManager.run {
+                } ?: this@BleConnectionManager.run {
                     loge("Cannot find $characteristicUuid to write to")
                     signalEndOfOperation()
                 }
@@ -279,7 +279,7 @@ class ConnectionManager @Inject constructor(
             is CharacteristicRead -> with(operation) {
                 gatt.findCharacteristic(characteristicUuid)?.let { characteristic ->
                     gatt.readCharacteristic(characteristic)
-                } ?: this@ConnectionManager.run {
+                } ?: this@BleConnectionManager.run {
                     loge("Cannot find $characteristicUuid to read from")
                     signalEndOfOperation()
                 }
@@ -288,7 +288,7 @@ class ConnectionManager @Inject constructor(
                 gatt.findDescriptor(descriptorUuid)?.let { descriptor ->
                     descriptor.value = payload
                     gatt.writeDescriptor(descriptor)
-                } ?: this@ConnectionManager.run {
+                } ?: this@BleConnectionManager.run {
                     loge("Cannot find $descriptorUuid to write to")
                     signalEndOfOperation()
                 }
@@ -296,7 +296,7 @@ class ConnectionManager @Inject constructor(
             is DescriptorRead -> with(operation) {
                 gatt.findDescriptor(descriptorUuid)?.let { descriptor ->
                     gatt.readDescriptor(descriptor)
-                } ?: this@ConnectionManager.run {
+                } ?: this@BleConnectionManager.run {
                     loge("Cannot find $descriptorUuid to read from")
                     signalEndOfOperation()
                 }
@@ -322,12 +322,12 @@ class ConnectionManager @Inject constructor(
 
                         cccDescriptor.value = payload
                         gatt.writeDescriptor(cccDescriptor)
-                    } ?: this@ConnectionManager.run {
+                    } ?: this@BleConnectionManager.run {
                         loge("${characteristic.uuid} doesn't contain the CCC descriptor!")
                         loge("cccdUuid: ${cccdUuid}")
                         signalEndOfOperation()
                     }
-                } ?: this@ConnectionManager.run {
+                } ?: this@BleConnectionManager.run {
                     loge("Cannot find $characteristicUuid! Failed to enable notifications.")
                     signalEndOfOperation()
                 }
@@ -344,11 +344,11 @@ class ConnectionManager @Inject constructor(
 
                         cccDescriptor.value = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE
                         gatt.writeDescriptor(cccDescriptor)
-                    } ?: this@ConnectionManager.run {
+                    } ?: this@BleConnectionManager.run {
                         loge("${characteristic.uuid} doesn't contain the CCC descriptor!")
                         signalEndOfOperation()
                     }
-                } ?: this@ConnectionManager.run {
+                } ?: this@BleConnectionManager.run {
                     loge("Cannot find $characteristicUuid! Failed to disable notifications.")
                     signalEndOfOperation()
                 }
