@@ -3,9 +3,9 @@ package com.lora.skylink.data.repositories
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import com.lora.skylink.App
-import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
-import com.lora.skylink.bluetoothlegacy.ConnectionManager
 import com.lora.skylink.data.model.WirelessDevice
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionManager
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.util.Logger
 import io.mockk.clearAllMocks

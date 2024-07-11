@@ -1,6 +1,7 @@
-package com.lora.skylink.bluetoothlegacy
+package com.lora.skylink.data.remote.bluetoothlowenergy
 
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothDevice.TRANSPORT_LE
 import android.bluetooth.BluetoothGatt
@@ -15,17 +16,16 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Handler
 import android.os.Looper
-import com.lora.skylink.util.AppLogger
 import com.lora.skylink.util.AppLogger.logd
 import com.lora.skylink.util.AppLogger.loge
 import com.lora.skylink.util.AppLogger.logw
-import com.lora.skylink.util.Logger
 import com.lora.skylink.util.logi
 import com.lora.skylink.util.logv
 import java.lang.ref.WeakReference
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentLinkedQueue
+import javax.inject.Inject
 
 
 private const val GATT_MIN_MTU_SIZE = 23
@@ -33,9 +33,10 @@ private const val GATT_MIN_MTU_SIZE = 23
 private const val GATT_MAX_MTU_SIZE = 517
 
 // Remember constructors are not allowed for objects, so Injection is different, happens in App class
-object ConnectionManager {
-
-    private var logger: Logger = AppLogger
+class ConnectionManager @Inject constructor(
+    private val context: Context,
+    private val bluetoothAdapter: BluetoothAdapter
+) {
 
     private var listeners: MutableSet<WeakReference<ConnectionEventListener>> = mutableSetOf()
 
@@ -43,9 +44,6 @@ object ConnectionManager {
     private val operationQueue = ConcurrentLinkedQueue<BleOperationType>()
     private var pendingOperation: BleOperationType? = null
 
-    fun initialize(logger: Logger) {
-        this.logger = logger
-    }
 
     fun servicesOnDevice(device: BluetoothDevice): List<BluetoothGattService>? =
         deviceGattMap[device]?.services

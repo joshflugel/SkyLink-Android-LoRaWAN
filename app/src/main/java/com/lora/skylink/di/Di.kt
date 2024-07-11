@@ -6,6 +6,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import com.lora.skylink.data.remote.bluetooth.BluetoothAdapterManager
 import com.lora.skylink.data.remote.bluetooth.BluetoothLowEnergyScanController
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionManager
 import com.lora.skylink.data.repositories.BluetoothConnectivityRepositoryImpl
 import com.lora.skylink.data.repositories.BluetoothLowEnergyRepositoryImpl
 import com.lora.skylink.domain.BluetoothDeviceConverter
@@ -20,6 +21,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+
 
 
 @Module
@@ -42,9 +44,23 @@ object Di{
 
     @Provides
     @Singleton
+    fun provideConnectionManager(
+        @ApplicationContext context: Context,
+        bluetoothAdapter: BluetoothAdapter
+    ): ConnectionManager {
+        return ConnectionManager(context, bluetoothAdapter)
+    }
+
+    @Provides
+    @Singleton
     fun provideBluetoothConnectivityRepository(
-        deviceConverter: BluetoothDeviceConverter
-    ): IBluetoothConnectivityRepository = BluetoothConnectivityRepositoryImpl(deviceConverter)
+        deviceConverter: BluetoothDeviceConverter,
+        connectionManager: ConnectionManager
+    ): IBluetoothConnectivityRepository {
+        return BluetoothConnectivityRepositoryImpl(deviceConverter, connectionManager)
+    }
+
+
 
     @Provides
     @Singleton

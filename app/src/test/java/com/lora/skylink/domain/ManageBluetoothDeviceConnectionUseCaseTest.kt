@@ -1,6 +1,6 @@
 package com.lora.skylink.domain
 
-import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
 import com.lora.skylink.data.model.WirelessDevice
 import io.mockk.mockk
 import io.mockk.verify

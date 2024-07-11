@@ -1,4 +1,4 @@
-package com.lora.skylink.bluetoothlegacy
+package com.lora.skylink.data.remote.bluetoothlowenergy
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic

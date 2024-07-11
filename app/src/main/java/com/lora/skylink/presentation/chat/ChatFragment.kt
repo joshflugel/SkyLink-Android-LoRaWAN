@@ -22,15 +22,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.lora.skylink.BuildConfig
 import com.lora.skylink.R
-import com.lora.skylink.bluetoothlegacy.CharacteristicProperty
-import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
-import com.lora.skylink.bluetoothlegacy.ConnectionManager
-import com.lora.skylink.bluetoothlegacy.byteArrayToAsciiString
-import com.lora.skylink.bluetoothlegacy.isIndicatable
-import com.lora.skylink.bluetoothlegacy.isNotifiable
-import com.lora.skylink.bluetoothlegacy.isReadable
-import com.lora.skylink.bluetoothlegacy.isWritable
-import com.lora.skylink.bluetoothlegacy.isWritableWithoutResponse
+import com.lora.skylink.data.remote.bluetoothlowenergy.CharacteristicProperty
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionManager
+import com.lora.skylink.data.remote.bluetoothlowenergy.byteArrayToAsciiString
+import com.lora.skylink.data.remote.bluetoothlowenergy.isIndicatable
+import com.lora.skylink.data.remote.bluetoothlowenergy.isNotifiable
+import com.lora.skylink.data.remote.bluetoothlowenergy.isReadable
+import com.lora.skylink.data.remote.bluetoothlowenergy.isWritable
+import com.lora.skylink.data.remote.bluetoothlowenergy.isWritableWithoutResponse
 import com.lora.skylink.databinding.FragmentChatBinding
 import com.lora.skylink.presentation.common.PermissionsRequesterLEGACY
 import com.lora.skylink.util.DateUtil
@@ -56,6 +56,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private lateinit var binding: FragmentChatBinding
 
+    @Inject lateinit var connectionManager: ConnectionManager
+
     private var bluetoothDevice
     : BluetoothDevice? = null
     @Inject
@@ -75,10 +77,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         Toast.makeText(context, "Connected with: $bluetoothDeviceName", Toast.LENGTH_LONG).show()
 
 // ==== END BLUETOOTH
-        // chatState = buildChatState()
-       // binding = FragmentChatBinding.bind(view)
-
-        //setupRecyclerView()
 
 
         setupCharacteristics()
@@ -98,10 +96,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             findNavController().popBackStack()
         }
 
-        ConnectionManager.registerListener(connectionEventListener)
+        connectionManager.registerListener(connectionEventListener)
     }
     override fun onDestroy() {
-        ConnectionManager.unregisterListener(connectionEventListener)
+        connectionManager.unregisterListener(connectionEventListener)
         super.onDestroy()
         loge("ChatFragment  .onDestroy")
     }
@@ -110,7 +108,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 bluetoothDevice?.let {
-                    ConnectionManager.disconnectFromDevice(it)
+                    connectionManager.disconnectFromDevice(it)
                 } ?: run {
                     findNavController().popBackStack()
                 }
@@ -135,7 +133,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                         }
                         CharacteristicProperty.Notifiable -> {
                             loge("NOTIFY and INDICATABLE")
-                            ConnectionManager.enableNotifications(bluetoothDevice!!, characteristic)
+                            connectionManager.enableNotifications(bluetoothDevice!!, characteristic)
                             bluetoothCharacteristic = characteristic
                         }
                         else -> {}
@@ -167,7 +165,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     val bytes = binding.inputTextbox.text.toString().toByteArray()
                     loge("Writing to ${bluetoothCharacteristic.uuid}: ${bytes.byteArrayToAsciiString()}")
                     bluetoothDevice?.let {
-                        ConnectionManager.writeCharacteristic(it, bluetoothCharacteristic, bytes)
+                        connectionManager.writeCharacteristic(it, bluetoothCharacteristic, bytes)
                     }
                 } else {
                     loge("bluetoothCharacteristic is not initialized")
@@ -264,7 +262,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     /////// BLUETOOTH COMMS
     private val characteristics by lazy {
         bluetoothDevice?.let {
-            ConnectionManager.servicesOnDevice(it)?.flatMap { service ->
+            connectionManager.servicesOnDevice(it)?.flatMap { service ->
                 service.characteristics ?: listOf()
             }
         } ?: listOf()

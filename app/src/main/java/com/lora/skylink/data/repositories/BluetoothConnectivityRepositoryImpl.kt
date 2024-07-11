@@ -2,25 +2,20 @@ package com.lora.skylink.data.repositories
 
 
 import com.lora.skylink.App
-import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
-import com.lora.skylink.bluetoothlegacy.ConnectionManager
 import com.lora.skylink.data.model.WirelessDevice
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionManager
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.domain.IBluetoothConnectivityRepository
-import com.lora.skylink.util.AppLogger
 import com.lora.skylink.util.AppLogger.loge
 import com.lora.skylink.util.AppLogger.logi
-import com.lora.skylink.util.Logger
 import javax.inject.Inject
 
 
 class BluetoothConnectivityRepositoryImpl @Inject constructor(
     private val deviceConverter: BluetoothDeviceConverter,
-    private val logger: Logger = AppLogger
+    private val connectionManager: ConnectionManager
 ) : IBluetoothConnectivityRepository {
-
-        @Inject
-        lateinit var connectionManager: ConnectionManager
 
         override fun connectToDevice(device: WirelessDevice) {
             logi("BT Repo connectToDevice")

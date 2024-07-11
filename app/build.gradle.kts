@@ -87,4 +87,9 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
     testImplementation("io.mockk:mockk:1.13.11")
+
+    testImplementation("org.robolectric:robolectric:4.8")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.22")
+    testImplementation("io.mockk:mockk:1.13.11")
+
 }
