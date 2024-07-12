@@ -3,7 +3,7 @@ package com.lora.skylink.presentation.scan
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
 import com.lora.skylink.data.model.WirelessDevice
 import com.lora.skylink.domain.CheckBluetoothEnabledUseCase
 import com.lora.skylink.domain.ManageBluetoothDeviceConnectionUseCase

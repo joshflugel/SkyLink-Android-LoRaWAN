@@ -1,8 +1,8 @@
-package com.lora.skylink.data
+package com.lora.skylink.data.repositories
 
-import com.lora.skylink.data.bluetoothLowEnergy.BluetoothAdapterManager
-import com.lora.skylink.data.bluetoothLowEnergy.BluetoothLowEnergyScanController
 import com.lora.skylink.data.model.WirelessDevice
+import com.lora.skylink.data.remote.bluetooth.BluetoothAdapterManager
+import com.lora.skylink.data.remote.bluetooth.BluetoothLowEnergyScanController
 import com.lora.skylink.domain.IBluetoothLowEnergyRepository
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject

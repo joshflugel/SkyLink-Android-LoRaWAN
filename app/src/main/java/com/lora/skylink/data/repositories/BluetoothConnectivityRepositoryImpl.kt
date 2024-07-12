@@ -1,34 +1,37 @@
-package com.lora.skylink.data
+package com.lora.skylink.data.repositories
 
 
 import com.lora.skylink.App
-import com.lora.skylink.bluetoothlegacy.ConnectionEventListener
-import com.lora.skylink.bluetoothlegacy.ConnectionManager
-import com.lora.skylink.util.loge
 import com.lora.skylink.data.model.WirelessDevice
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
+import com.lora.skylink.data.remote.bluetoothlowenergy.BleConnectionManager
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.domain.IBluetoothConnectivityRepository
+import com.lora.skylink.util.AppLogger.loge
+import com.lora.skylink.util.AppLogger.logi
 import javax.inject.Inject
 
 
 class BluetoothConnectivityRepositoryImpl @Inject constructor(
-    private val deviceConverter: BluetoothDeviceConverter
+    private val deviceConverter: BluetoothDeviceConverter,
+    private val bleConnectionManager: BleConnectionManager
 ) : IBluetoothConnectivityRepository {
-        private val connectionEventListener = ConnectionEventListener()
 
         override fun connectToDevice(device: WirelessDevice) {
-            loge("BT Repo connectToDevice")
+            logi("BT Repo connectToDevice")
             val bluetoothDevice = deviceConverter.toBluetoothDevice(device)
+            val context = App.applicationContext()
+
             bluetoothDevice?.let {
-                ConnectionManager.connect(it, App.applicationContext())
+                bleConnectionManager.connect(it, context)
             }
         }
 
         override fun disconnectFromDevice(device: WirelessDevice) {
-            loge("BT Repo DisconnectFromDevice")
+            logi("BT Repo DisconnectFromDevice")
             val bluetoothDevice = deviceConverter.toBluetoothDevice(device)
             bluetoothDevice?.let {
-                ConnectionManager.disconnectFromDevice(it)
+                bleConnectionManager.disconnectFromDevice(it)
             }
         }
 
@@ -36,17 +39,17 @@ class BluetoothConnectivityRepositoryImpl @Inject constructor(
             loge("BT Repo Teardown")
             val bluetoothDevice = deviceConverter.toBluetoothDevice(device)
             bluetoothDevice?.let {
-                ConnectionManager.disconnectFromDeviceAndReleaseResources(it)
+                bleConnectionManager.disconnectFromDeviceAndReleaseResources(it)
             }
         }
 
         override fun registerConnectionEventListener(listener: ConnectionEventListener) {
-            loge("BT Repo REGISTER ConnectionEventListener")
-            ConnectionManager.registerListener(listener)
+            logi("BT Repo REGISTER ConnectionEventListener")
+            bleConnectionManager.registerListener(listener)
         }
 
         override fun unregisterConnectionEventListener(listener: ConnectionEventListener) {
-            loge("BT Repo UNREGISTER ConnectionEventListener")
-            ConnectionManager.unregisterListener(listener)
+            logi("BT Repo UNREGISTER ConnectionEventListener")
+            bleConnectionManager.unregisterListener(listener)
         }
     }
