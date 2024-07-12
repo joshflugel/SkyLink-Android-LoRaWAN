@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.lora.skylink.presentation.common.PermissionsRequester
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 fun Fragment.buildPermissionsState(
@@ -15,8 +16,19 @@ fun Fragment.buildPermissionsState(
     locationBluetoothPermissionRequester: PermissionsRequester = PermissionsRequester(this)
     ) = PermissionsState(scope, navController, locationBluetoothPermissionRequester)
 
+class PermissionsStateFactory @Inject constructor(
+    private val fragment: Fragment
+) {
+    fun create(
+        scope: CoroutineScope = fragment.viewLifecycleOwner.lifecycleScope,
+        navController: NavController = fragment.findNavController(),
+        locationBluetoothPermissionRequester: PermissionsRequester = PermissionsRequester(fragment)
+    ): PermissionsState {
+        return PermissionsState(scope, navController, locationBluetoothPermissionRequester)
+    }
+}
 
-class PermissionsState(
+class PermissionsState @Inject constructor (
     private val scope: CoroutineScope,
     private val navController: NavController,
     private val locationBluetoothPermissionRequester: PermissionsRequester

@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.lora.skylink.R
-import com.lora.skylink.util.loge
 import com.lora.skylink.databinding.FragmentPermissionsBinding
+import com.lora.skylink.util.loge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,6 +22,7 @@ import javax.inject.Inject
 class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
 
     private val viewModel : PermissionsViewModel by viewModels()
+    @Inject lateinit var permissionsStateFactory: PermissionsStateFactory
     private lateinit var permissionsState : PermissionsState
     @Inject lateinit var bluetoothAdapter: BluetoothAdapter
 
@@ -29,8 +30,8 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
         super.onViewCreated(view, savedInstanceState)
 
         println("FLUGEL - PermissionsFrag.onResume")
-
-        permissionsState = buildPermissionsState()
+        
+        permissionsState = permissionsStateFactory.create()
 
         val binding = FragmentPermissionsBinding.bind(view)
         binding.btnGrantPermissions.setOnClickListener{

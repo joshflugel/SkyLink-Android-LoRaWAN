@@ -5,8 +5,16 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
 import kotlin.coroutines.resume
 
+class PermissionsRequesterFactory @Inject constructor(
+    private val fragment: Fragment
+) {
+    fun create(): PermissionsRequester {
+        return PermissionsRequester(fragment)
+    }
+}
 
 class PermissionsRequester(
     private val fragment: Fragment,
