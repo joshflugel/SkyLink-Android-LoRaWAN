@@ -22,12 +22,15 @@ import com.lora.skylink.util.loge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @SuppressLint("MissingPermission")
 @AndroidEntryPoint
 class ScanFragment : Fragment(R.layout.fragment_scan) {
 
     private val viewModel: ScanViewModel by viewModels()
+
+    @Inject
     lateinit var permissionsRequester: PermissionsRequester
 
     private lateinit var binding: FragmentScanBinding
@@ -41,7 +44,6 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        permissionsRequester = PermissionsRequester(this)
         binding = FragmentScanBinding.bind(view)
 
 

@@ -32,7 +32,7 @@ import com.lora.skylink.data.remote.bluetoothlowenergy.isReadable
 import com.lora.skylink.data.remote.bluetoothlowenergy.isWritable
 import com.lora.skylink.data.remote.bluetoothlowenergy.isWritableWithoutResponse
 import com.lora.skylink.databinding.FragmentChatBinding
-import com.lora.skylink.presentation.common.PermissionsRequesterLEGACY
+import com.lora.skylink.presentation.common.PermissionsRequester
 import com.lora.skylink.util.DateUtil
 import com.lora.skylink.util.logd
 import com.lora.skylink.util.loge
@@ -48,7 +48,9 @@ import javax.inject.Inject
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private val args: ChatFragmentArgs by navArgs()
-    private var permissionsRequester = PermissionsRequesterLEGACY(this)
+
+    @Inject
+    lateinit var permissionsRequester: PermissionsRequester
 
     private val viewModel: ChatViewModel by viewModels()
     private lateinit var  chatState: ChatState

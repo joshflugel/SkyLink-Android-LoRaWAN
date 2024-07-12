@@ -60,8 +60,6 @@ object Di{
         return BluetoothConnectivityRepositoryImpl(deviceConverter, bleConnectionManager)
     }
 
-
-
     @Provides
     @Singleton
     fun provideBluetoothLowEnergyRepository(
@@ -73,11 +71,4 @@ object Di{
     @Singleton
     fun provideLogger(): Logger = AppLogger
 
-
-    /*
-    @Provides
-    fun providePermissionsRequester(fragment: Fragment): PermissionsRequester {
-        return PermissionsRequester(fragment)
-    }
-    */
 }
