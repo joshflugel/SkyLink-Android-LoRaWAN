@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import com.lora.skylink.presentation.common.PermissionsRequesterLEGACY
+import com.lora.skylink.presentation.common.PermissionsRequester
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -12,14 +12,14 @@ import kotlinx.coroutines.launch
 fun Fragment.buildPermissionsState(
     scope: CoroutineScope = viewLifecycleOwner.lifecycleScope,
     navController: NavController = findNavController(),
-    locationBluetoothPermissionRequester: PermissionsRequesterLEGACY = PermissionsRequesterLEGACY(this)
+    locationBluetoothPermissionRequester: PermissionsRequester = PermissionsRequester(this)
     ) = PermissionsState(scope, navController, locationBluetoothPermissionRequester)
 
 
 class PermissionsState(
     private val scope: CoroutineScope,
     private val navController: NavController,
-    private val locationBluetoothPermissionRequester: PermissionsRequesterLEGACY
+    private val locationBluetoothPermissionRequester: PermissionsRequester
     ) {
     fun requestPermissions(afterRequest: (Boolean) -> Unit) {
         scope.launch {

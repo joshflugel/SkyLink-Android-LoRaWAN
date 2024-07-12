@@ -1,16 +1,14 @@
 package com.lora.skylink.presentation.common
 
-import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import javax.inject.Inject
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-class PermissionsRequester @Inject constructor(
+
+class PermissionsRequester(
     private val fragment: Fragment,
     private val permissions: Array<String> = requiredAppPermissions
 ) {
@@ -18,16 +16,6 @@ class PermissionsRequester @Inject constructor(
     private var onRequest: (Boolean) -> Unit = {}
     private var launcher = fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGrantedMap: Map<String, Boolean> ->
         onRequest(isGrantedMap.values.all { it })
-    }
-
-    init {
-        init(fragment)
-    }
-
-    private fun init(fragment: Fragment) {
-        this.launcher = fragment.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { isGrantedMap: Map<String, Boolean> ->
-            onRequest(isGrantedMap.values.all { it })
-        }
     }
 
     suspend fun request(): Boolean =
