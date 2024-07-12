@@ -4,8 +4,8 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import com.lora.skylink.App
 import com.lora.skylink.data.model.WirelessDevice
-import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
 import com.lora.skylink.data.remote.bluetoothlowenergy.BleConnectionManager
+import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.util.Logger
 import io.mockk.clearAllMocks
@@ -34,7 +34,6 @@ class BluetoothConnectivityRepositoryImplTest {
 
     @Before
     fun setup() {
-        // Initialize mocks, relaxed = true to suppress unmocked calls
         deviceConverter = mockk()
         context = mockk(relaxed = true)
         logger = mockk(relaxed = true)
@@ -43,8 +42,7 @@ class BluetoothConnectivityRepositoryImplTest {
         mockkObject(App.Companion)
         every { App.applicationContext() } returns context
 
-        repository = BluetoothConnectivityRepositoryImpl(deviceConverter, logger)
-        repository.connectionManager = bleConnectionManager // Inject mock ConnectionManager
+        repository = BluetoothConnectivityRepositoryImpl(deviceConverter, bleConnectionManager)
     }
 
     @After
@@ -60,7 +58,6 @@ class BluetoothConnectivityRepositoryImplTest {
 
         // Stubbing behavior
         every { deviceConverter.toBluetoothDevice(wirelessDevice) } returns bluetoothDevice
-       // every { App.applicationContext() } returns context
 
         // Call the method under test
         repository.connectToDevice(wirelessDevice)
@@ -72,59 +69,45 @@ class BluetoothConnectivityRepositoryImplTest {
 
     @Test
     fun `disconnectFromDevice should call ConnectionManager disconnectFromDevice`() {
-        // Mock dependencies
         val wirelessDevice = WirelessDevice("Test Device", "00:11:22:33:44:55", -50)
         val bluetoothDevice = mockk<BluetoothDevice>()
 
-        // Stubbing behavior
         every { deviceConverter.toBluetoothDevice(wirelessDevice) } returns bluetoothDevice
 
-        // Call the method under test
         repository.disconnectFromDevice(wirelessDevice)
 
-        // Verify interactions
         verify { deviceConverter.toBluetoothDevice(wirelessDevice) }
         verify { bleConnectionManager.disconnectFromDevice(bluetoothDevice) }
     }
 
     @Test
     fun `teardownConnection should call ConnectionManager disconnectFromDeviceAndReleaseResources`() {
-        // Mock dependencies
         val wirelessDevice = WirelessDevice("Test Device", "00:11:22:33:44:55", -50)
         val bluetoothDevice = mockk<BluetoothDevice>()
 
-        // Stubbing behavior
         every { deviceConverter.toBluetoothDevice(wirelessDevice) } returns bluetoothDevice
 
-        // Call the method under test
         repository.teardownConnection(wirelessDevice)
 
-        // Verify interactions
         verify { deviceConverter.toBluetoothDevice(wirelessDevice) }
         verify { bleConnectionManager.disconnectFromDeviceAndReleaseResources(bluetoothDevice) }
     }
 
     @Test
     fun `registerConnectionEventListener should call ConnectionManager registerListener`() {
-        // Mock listener
         val listener = mockk<ConnectionEventListener>(relaxed = true)
 
-        // Call the method under test
         repository.registerConnectionEventListener(listener)
 
-        // Verify interactions
         verify { bleConnectionManager.registerListener(any()) }
     }
 
     @Test
     fun `unregisterConnectionEventListener should call ConnectionManager unregisterListener`() {
-        // Mock listener
         val listener = mockk<ConnectionEventListener>(relaxed = true)
 
-        // Call the method under test
         repository.unregisterConnectionEventListener(listener)
 
-        // Verify interactions
         verify { bleConnectionManager.unregisterListener(any()) }
     }
 }
