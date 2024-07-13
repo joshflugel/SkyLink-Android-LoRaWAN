@@ -34,11 +34,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         dataBinding = true
@@ -89,7 +89,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.11")
 
     testImplementation("org.robolectric:robolectric:4.8")
+    testImplementation ("androidx.test:core:1.6.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.8.22")
-    testImplementation("io.mockk:mockk:1.13.11")
 
 }
