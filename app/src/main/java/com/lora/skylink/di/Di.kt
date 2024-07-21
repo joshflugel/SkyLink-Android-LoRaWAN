@@ -6,11 +6,13 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import com.lora.skylink.data.remote.bluetooth.BluetoothAdapterManager
 import com.lora.skylink.data.remote.bluetooth.BluetoothLowEnergyScanController
+import com.lora.skylink.data.remote.bluetooth.BluetoothReadyCheckerImpl
 import com.lora.skylink.data.remote.bluetoothlowenergy.BleConnectionManager
 import com.lora.skylink.data.repositories.BluetoothConnectivityRepositoryImpl
 import com.lora.skylink.data.repositories.BluetoothLowEnergyRepositoryImpl
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.domain.BluetoothDeviceConverterImpl
+import com.lora.skylink.domain.BluetoothReadyChecker
 import com.lora.skylink.domain.IBluetoothConnectivityRepository
 import com.lora.skylink.domain.IBluetoothLowEnergyRepository
 import com.lora.skylink.util.AppLogger
@@ -27,6 +29,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object Di{
+
+    @Provides
+    @Singleton
+    fun provideBluetoothDeviceChecker(
+        bluetoothAdapter: BluetoothAdapter
+    ): BluetoothReadyChecker = BluetoothReadyCheckerImpl(bluetoothAdapter)
 
     @Provides
     fun provideBluetoothAdapter(

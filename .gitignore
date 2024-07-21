@@ -33,3 +33,15 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+#cache
+.tmp/
+android/
+caches/
+daemon/
+kotlin-profile/
+native/
+wrapper/
+
+#Exclude, to let builds resolve to different dependency versions and configs
+android.lock

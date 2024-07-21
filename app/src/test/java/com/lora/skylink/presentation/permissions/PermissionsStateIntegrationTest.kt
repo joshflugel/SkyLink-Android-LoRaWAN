@@ -27,7 +27,7 @@ import org.robolectric.annotation.LooperMode
 @RunWith(RobolectricTestRunner::class)
 @LooperMode(LooperMode.Mode.PAUSED)
 @Config(manifest = Config.NONE)
-class PermissionsStateTest {
+class PermissionsStateIntegrationTest {
 
     private lateinit var permissionsState: PermissionsState
     private val navController: NavController = mock(NavController::class.java)
@@ -50,13 +50,13 @@ class PermissionsStateTest {
     }
 
     @Test
-    fun `test are all permissions granted`() {
+    fun `test all permissions granted`() {
         `when`(permissionsRequester.checkAllPermissions()).thenReturn(true)
         assert(permissionsState.areAllPermissionsGranted())
     }
 
     @Test
-    fun `test request permissions`() = runTest {
+    fun `test requesting permissions`() = runTest {
         `when`(permissionsRequester.request()).thenReturn(true)
 
         permissionsState.requestPermissions { allGranted ->
@@ -65,7 +65,7 @@ class PermissionsStateTest {
     }
 
     @Test
-    fun `test navigate to scan fragment`() = runTest {
+    fun `test navigation to scan fragment`() = runTest {
         val directions = PermissionsFragmentDirections.actionPermissionsToScanDest()
 
         doNothing().`when`(navController).navigate(eq(directions))

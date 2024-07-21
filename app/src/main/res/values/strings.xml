@@ -19,4 +19,13 @@
     <string name="send">Send</string>
     <string name="me">Me</string>
     <string name="chat_ui_image_header">Chat UI image header</string>
+
+    <string name="while_using_the_app_button_text">While using the app</string>
+    <string name="only_this_time_button_text">Only this time</string>
+    <string name="dont_allow_button_text">Don\'t allow</string>
+    <string name="allow_button_text">Allow</string>
+    <string name="deny_button_text">Deny</string>
+
+    <string name="connections_settings_text">Connections</string>
+    <string name="bluetooth_settings_text">Bluetooth</string>
 </resources>

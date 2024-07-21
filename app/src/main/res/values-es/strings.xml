@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="while_using_the_app_button_text">Mientras se usa la aplicación</string>
+    <string name="only_this_time_button_text">Solo esta vez</string>
+    <string name="dont_allow_button_text">No permitir</string>
+    <string name="allow_button_text">Permitir</string>
+    <string name="deny_button_text">Rechazar</string>
+    <string name="connections_settings_text">Conexiones</string>
+    <string name="bluetooth_settings_text">Bluetooth</string>
+
+</resources>

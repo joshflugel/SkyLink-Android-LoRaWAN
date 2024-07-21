@@ -5,7 +5,7 @@ import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class App: Application() {
+open class App : Application() {
 
     init {
         instance = this
@@ -14,7 +14,7 @@ class App: Application() {
     companion object {
         private var instance: App? = null
 
-        fun applicationContext() : Context {
+        fun applicationContext(): Context {
             return instance!!.applicationContext
         }
     }
