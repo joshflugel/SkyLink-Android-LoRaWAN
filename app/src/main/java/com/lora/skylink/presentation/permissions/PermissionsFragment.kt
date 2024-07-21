@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.lora.skylink.R
 import com.lora.skylink.databinding.FragmentPermissionsBinding
+import com.lora.skylink.domain.BluetoothReadyChecker
 import com.lora.skylink.util.loge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -24,7 +25,9 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
     private val viewModel : PermissionsViewModel by viewModels()
     @Inject lateinit var permissionsStateFactory: PermissionsStateFactory
     private lateinit var permissionsState : PermissionsState
+
     @Inject lateinit var bluetoothAdapter: BluetoothAdapter
+    @Inject lateinit var bluetoothReadyChecker: BluetoothReadyChecker
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,13 +77,8 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
             }
     }
 
-    private fun isBluetoothAdapterReady():Boolean {
-        bluetoothAdapter.let { adapter ->
-            if (adapter.isEnabled) {
-                return true
-            }
-        }
-        return false
+    private fun isBluetoothAdapterReady(): Boolean {
+        return bluetoothReadyChecker.isBluetoothAdapterReady()
     }
 
     private val requestEnableBluetoothLauncher =

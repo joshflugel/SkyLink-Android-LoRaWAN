@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGattCharacteristic
+import android.content.pm.ApplicationInfo
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
@@ -20,7 +21,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import com.lora.skylink.BuildConfig
 import com.lora.skylink.R
 import com.lora.skylink.data.remote.bluetoothlowenergy.CharacteristicProperty
 import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
@@ -42,6 +42,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
+
 //import com.lora.skylink.BuildConfig
 
 @AndroidEntryPoint
@@ -153,7 +155,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         binding = FragmentChatBinding.bind(view)
 
         // CUustom Easter egg
-        if(Build.MODEL.equals("SM-A546B") && BuildConfig.DEBUG) {
+        if(Build.MODEL.equals("SM-A546B") && Random.nextBoolean()) {
                 binding.imgHeaderChat.setImageResource(R.drawable.erc_minilink_rural)
         }
 
