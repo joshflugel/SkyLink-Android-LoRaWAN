@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.lora.skylink.R
+import com.lora.skylink.data.model.WirelessDevice
 import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
 import com.lora.skylink.databinding.FragmentScanBinding
 import com.lora.skylink.presentation.common.PermissionsRequester
@@ -66,45 +67,59 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
 
 
         binding.btnScanDevices.setOnClickListener {
-            viewModel.showEnableBluetoothPromptIfDisabled()
-            if (viewModel.uiState.value.isScanning) {
-                viewModel.stopScanning()
-            } else {
-                viewModel.startScanning()
-            }
+            viewModel.showEnableWirelessDevicePromptIfDisabled()
+            viewModel.btnScanDevicesPressed()
         }
 
         setupRecyclerView()
+        collectWirelessDevices()
+        observeIsWirelessDeviceEnabled()
+        observeUIState()
+    }
 
+    private fun collectWirelessDevices() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collect { uiState ->
-                binding.btnScanDevices.text = if (uiState.isScanning) getString(R.string.stop_scanning)
-                    else getString(R.string.start_scanning)
-                scanResultAdapter.submitList(uiState.scannedDevices)
-
-                printScannedDevicesInLogcat(uiState)
+            viewModel.scannedDevices.collect { devices ->
+                scanResultAdapter.submitList(devices)
+                printScannedDevicesInLogcat(devices)
             }
         }
+    }
 
-        viewModel.isBluetoothEnabled.observe(viewLifecycleOwner, Observer { isEnabled ->
+    private fun observeUIState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collect { uiState ->
+                binding.btnScanDevices.text = if (uiState is ScanUIState.Scanning) {
+                    getString(R.string.stop_scanning)
+                } else {
+                    getString(R.string.start_scanning)
+                }
+
+                if (uiState is ScanUIState.Error) {
+                    Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun observeIsWirelessDeviceEnabled() {
+        viewModel.isWirelessDeviceEnabled.observe(viewLifecycleOwner, Observer { isEnabled ->
             if (isEnabled == false) {
                 navigateToPermissionsFragment()
             }
         })
     }
-
-    private fun printScannedDevicesInLogcat(uiState: ScanUIState) {
-        val devicesString = uiState.scannedDevices.joinToString(separator = "\n") { it ->
-            "Name: ${it.name}, MAC Address: ${it.macAddress}, Signal Strength: ${it.signalStrength_dBm}"
+    private fun printScannedDevicesInLogcat(devices: List<WirelessDevice>) {
+        val devicesString = devices.joinToString(separator = "\n") { device ->
+            "Name: ${device.name}, MAC Address: ${device.macAddress}, Signal Strength: ${device.signalStrength_dBm}"
         }
         loge("List of Devices:\n$devicesString")
     }
 
-
     override fun onResume() {
         super.onResume()
         loge("ScanFragment  .onResume")
-        viewModel.showEnableBluetoothPromptIfDisabled()
+        viewModel.showEnableWirelessDevicePromptIfDisabled()
         if(!permissionsRequester.checkAllPermissions()) {
             navigateToPermissionsFragment()
         }
