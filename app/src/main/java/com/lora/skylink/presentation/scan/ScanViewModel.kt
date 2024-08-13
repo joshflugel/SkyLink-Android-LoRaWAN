@@ -1,6 +1,5 @@
 package com.lora.skylink.presentation.scan
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lora.skylink.data.model.WirelessDevice
@@ -11,7 +10,6 @@ import com.lora.skylink.domain.ScanBluetoothLowEnergyDevicesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.update
@@ -25,25 +23,28 @@ class ScanViewModel @Inject constructor(
     private val manageBluetoothDeviceConnectionUseCase: ManageBluetoothDeviceConnectionUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<ScanUIState>(ScanUIState.Idle)
-    val uiState: StateFlow<ScanUIState> = _uiState.asStateFlow()
-
-    val isWirelessDeviceEnabled = MutableLiveData<Boolean>()
-
-    private val _scannedDevices = MutableStateFlow<List<WirelessDevice>>(emptyList())
-    val scannedDevices: StateFlow<List<WirelessDevice>> = _scannedDevices.asStateFlow()
-
-
+    private var _uiState = MutableStateFlow(ScanUIState())
+    val uiState = _uiState.asStateFlow()
     private var scanJob: Job? = null
+
+    fun btnScanDevicesPressed() {
+        showEnableWirelessDevicePromptIfDisabled()
+        if (uiState.value.isScanning) {
+            stopScanning()
+        } else {
+            startScanning()
+        }
+    }
+
     fun startScanning() {
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
-            _uiState.update { ScanUIState.Scanning}
+            _uiState.update { it.copy(isScanning = true, scannedDevices = emptyList()) }
             scanBluetoothLeDevicesUseCase.startScanning()
-            val defaultScanSamplingMilliseconds = 1000L
+            val defaultScanSamplingMilliseconds = 600L
 
             scanBluetoothLeDevicesUseCase().sample(defaultScanSamplingMilliseconds).collect { devices ->
-                _scannedDevices.update { devices }
+                _uiState.update { it.copy(scannedDevices = devices) }
             }
         }
     }
@@ -53,13 +54,13 @@ class ScanViewModel @Inject constructor(
 
         viewModelScope.launch {
             scanBluetoothLeDevicesUseCase.stopScanning()
-            _uiState.update { ScanUIState.Idle }
+            _uiState.update { it.copy(isScanning = false, scannedDevices = emptyList()) }
         }
     }
 
     fun showEnableWirelessDevicePromptIfDisabled() {
         viewModelScope.launch {
-            isWirelessDeviceEnabled.value = checkBluetoothEnabledUseCase()
+            _uiState.value = _uiState.value.copy(isWirelessDeviceEnabled = checkBluetoothEnabledUseCase())
         }
     }
 
@@ -68,9 +69,8 @@ class ScanViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 manageBluetoothDeviceConnectionUseCase.connectToDevice(device)
-                _uiState.update { ScanUIState.Idle}
             } catch (e: Exception) {
-                _uiState.update { ScanUIState.Error(e.message ?: "Unknown Connection error")}
+                _uiState.update { ScanUIState(errorMessage = e.toString()) }
             }
         }
     }
@@ -84,13 +84,6 @@ class ScanViewModel @Inject constructor(
     fun unregisterConnectionEventListener(listener: ConnectionEventListener) {
         viewModelScope.launch {
             manageBluetoothDeviceConnectionUseCase.unregisterConnectionEventListener(listener)
-        }
-    }
-
-    fun btnScanDevicesPressed() {
-        when (_uiState.value) {
-            is ScanUIState.Scanning -> stopScanning()
-            else -> startScanning()
         }
     }
 

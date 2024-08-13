@@ -1,7 +1,10 @@
 package com.lora.skylink.presentation.scan
 
-sealed class ScanUIState {
-    object Idle : ScanUIState()
-    object Scanning : ScanUIState()
-    data class Error(val message: String) : ScanUIState()
-}
+import com.lora.skylink.data.model.WirelessDevice
+
+data class ScanUIState (
+    val scannedDevices: List<WirelessDevice> = emptyList(),
+    val isScanning: Boolean = false,
+    val isWirelessDeviceEnabled: Boolean = true,
+    val errorMessage: String = String()
+)

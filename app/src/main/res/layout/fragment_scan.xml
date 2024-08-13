@@ -4,16 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scan_fragment_rootview">
 
-    <!--
-    <data>
-        <import type=" deandroid.bluetooth.le.ScanResult"/>
-        <import type="java.util.List"/>
-        <variable
-            name="bluetoothdevices"
-            type="List&lt;ScanResult>" />
-    </data>
-    -->
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,9 +18,7 @@
 
             android:theme="@style/AppTheme.DarkOverlay"
             android:fitsSystemWindows="true">
-            <!--
-            app:contentScrim="?attr/colorPrimary"
-            -->
+
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsingLayout"
                 android:layout_width="match_parent"

@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -67,21 +66,19 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
 
 
         binding.btnScanDevices.setOnClickListener {
-            viewModel.showEnableWirelessDevicePromptIfDisabled()
             viewModel.btnScanDevicesPressed()
         }
 
         setupRecyclerView()
         collectWirelessDevices()
-        observeIsWirelessDeviceEnabled()
         observeUIState()
     }
 
     private fun collectWirelessDevices() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.scannedDevices.collect { devices ->
-                scanResultAdapter.submitList(devices)
-                printScannedDevicesInLogcat(devices)
+            viewModel.uiState.collect { uiState ->
+                scanResultAdapter.submitList(uiState.scannedDevices)
+                printScannedDevicesInLogcat(uiState.scannedDevices)
             }
         }
     }
@@ -89,26 +86,23 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
     private fun observeUIState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
-                binding.btnScanDevices.text = if (uiState is ScanUIState.Scanning) {
+                if(uiState.isWirelessDeviceEnabled == false) {
+                    navigateToPermissionsFragment()
+                }
+                binding.btnScanDevices.text = if (uiState.isScanning) {
                     getString(R.string.stop_scanning)
                 } else {
                     getString(R.string.start_scanning)
                 }
 
-                if (uiState is ScanUIState.Error) {
-                    Toast.makeText(context, uiState.message, Toast.LENGTH_LONG).show()
+                if (uiState.errorMessage.isNotEmpty()) {
+                    Toast.makeText(context, uiState.errorMessage, Toast.LENGTH_LONG).show()
                 }
+
             }
         }
     }
 
-    private fun observeIsWirelessDeviceEnabled() {
-        viewModel.isWirelessDeviceEnabled.observe(viewLifecycleOwner, Observer { isEnabled ->
-            if (isEnabled == false) {
-                navigateToPermissionsFragment()
-            }
-        })
-    }
     private fun printScannedDevicesInLogcat(devices: List<WirelessDevice>) {
         val devicesString = devices.joinToString(separator = "\n") { device ->
             "Name: ${device.name}, MAC Address: ${device.macAddress}, Signal Strength: ${device.signalStrength_dBm}"
