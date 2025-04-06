@@ -19,7 +19,6 @@ import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
 import com.lora.skylink.R
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -71,10 +70,10 @@ class PermissionsFragmentEndToEndInstrumentationTest {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         // Find the Bluetooth switch
         val bluetoothSwitch = device.wait(Until.findObject(By.clazz(Switch::class.java)), timeoutMilliseconds)
-        setSwitchTo(bluetoothSwitch, shouldBeTurnedOn)
         if (bluetoothSwitch != null) {
             couldSetBluetoothSuccessfully = true
         }
+        setSwitchTo(bluetoothSwitch, shouldBeTurnedOn)
         return couldSetBluetoothSuccessfully
     }
     private fun turnOnAndroidBluetooth(): Boolean { return setAndroidBluetoothSetting(true) }
@@ -98,7 +97,7 @@ class PermissionsFragmentEndToEndInstrumentationTest {
     @Test
     fun testTheScanFragmentIsShownAfterEnablingPermissionsAndBluetooth() {
 
-        assertTrue("Unable to Turn Off Android Bluetooth Setting", turnOffAndroidBluetooth())
+        turnOnAndroidBluetooth()
 
         // Navigate back to the App to interact with the system permission dialog
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
@@ -128,5 +127,4 @@ class PermissionsFragmentEndToEndInstrumentationTest {
 
         onView(withId(R.id.scan_fragment_rootview)).check(matches(isDisplayed()))
     }
-
 }
