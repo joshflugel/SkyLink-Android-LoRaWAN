@@ -1,4 +1,4 @@
-package com.lora.skylink.data.remote.bluetooth
+package com.lora.skylink.data.framework.bluetooth.scanning
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
@@ -32,6 +32,7 @@ class BluetoothLowEnergyScanController @Inject constructor(
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             val currentList = _scannedDevices.value.toMutableList()
             val indexQuery = currentList.indexOfFirst { it.macAddress == result.device.address }
+            // Only show Connectable devices, ignore the busy ones
             if (indexQuery != -1) {result.isConnectable
                 currentList[indexQuery] = result.toWirelessDevice()
             } else {

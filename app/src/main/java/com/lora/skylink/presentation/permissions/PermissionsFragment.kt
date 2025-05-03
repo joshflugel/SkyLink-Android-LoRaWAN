@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.lora.skylink.R
 import com.lora.skylink.databinding.FragmentPermissionsBinding
-import com.lora.skylink.domain.BluetoothReadyChecker
+import com.lora.skylink.domain.interfaces.BluetoothReadyChecker
 import com.lora.skylink.util.loge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch

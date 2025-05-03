@@ -1,7 +1,7 @@
-package com.lora.skylink.domain
+package com.lora.skylink.domain.usecases
 
-import com.lora.skylink.data.repositories.BluetoothLowEnergyRepositoryImpl
 import com.lora.skylink.data.model.WirelessDevice
+import com.lora.skylink.data.repositories.BluetoothLowEnergyRepositoryImpl
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 

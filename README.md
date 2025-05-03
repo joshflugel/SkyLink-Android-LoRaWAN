@@ -1,6 +1,6 @@
 # SkyLink 
 
-![SkyLink Banner](app/src/main/res/drawable/img_header_devices_highway.png)
+![SkyLink Banner](app/src/main/res/drawable/skylink_vintage.png)
 
 **SkyLink** is a **mobile Android app** enabling **long-range, peer-to-peer messaging** between smartphones — even in total **network dead zones**.
 

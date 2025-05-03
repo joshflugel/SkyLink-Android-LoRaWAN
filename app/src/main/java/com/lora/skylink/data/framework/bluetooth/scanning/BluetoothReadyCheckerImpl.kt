@@ -1,7 +1,7 @@
-package com.lora.skylink.data.remote.bluetooth
+package com.lora.skylink.data.framework.bluetooth.scanning
 
 import android.bluetooth.BluetoothAdapter
-import com.lora.skylink.domain.BluetoothReadyChecker
+import com.lora.skylink.domain.interfaces.BluetoothReadyChecker
 import javax.inject.Inject
 
 class BluetoothReadyCheckerImpl @Inject constructor(

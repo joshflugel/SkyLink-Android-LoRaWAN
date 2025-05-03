@@ -1,6 +1,6 @@
-package com.lora.skylink.domain
+package com.lora.skylink.domain.interfaces
 
-import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
+import com.lora.skylink.data.framework.bluetooth.communication.ConnectionEventListener
 import com.lora.skylink.data.model.WirelessDevice
 
 interface IBluetoothConnectivityRepository {
