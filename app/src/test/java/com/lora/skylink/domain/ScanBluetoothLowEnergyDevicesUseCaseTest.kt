@@ -3,6 +3,7 @@ package com.lora.skylink.domain
 
 import com.lora.skylink.data.model.WirelessDevice
 import com.lora.skylink.data.repositories.BluetoothLowEnergyRepositoryImpl
+import com.lora.skylink.domain.usecases.ScanBluetoothLowEnergyDevicesUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

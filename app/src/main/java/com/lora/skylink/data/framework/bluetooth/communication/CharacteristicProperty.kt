@@ -1,4 +1,4 @@
-package com.lora.skylink.data.remote.bluetoothlowenergy
+package com.lora.skylink.data.framework.bluetooth.communication
 
 enum class CharacteristicProperty {
     Readable,
@@ -6,5 +6,4 @@ enum class CharacteristicProperty {
     WritableWithoutResponse,
     Notifiable,
     Indicatable;
-
 }

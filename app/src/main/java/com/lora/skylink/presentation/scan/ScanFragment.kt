@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.lora.skylink.R
 import com.lora.skylink.data.model.WirelessDevice
-import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
+import com.lora.skylink.data.framework.bluetooth.communication.ConnectionEventListener
 import com.lora.skylink.databinding.FragmentScanBinding
 import com.lora.skylink.presentation.common.PermissionsRequester
 import com.lora.skylink.util.loge

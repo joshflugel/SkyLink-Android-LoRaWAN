@@ -1,23 +1,21 @@
-
-
-buildscript {
-    repositories {
-        google()
-    }
-   /* ext {
-        compose_ui_version = '1.2.0'
-    }*/
-    dependencies {
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.51.1")
+// Enforce consistent Kotlin version across all subprojects
+subprojects {
+    configurations.all {
+        resolutionStrategy.eachDependency {
+            if (requested.group == "org.jetbrains.kotlin") {
+                useVersion("1.9.23")
+            }
+        }
     }
 }
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+// Top-level plugin declarations
 plugins {
-    id("com.android.application") version "8.1.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.0" apply false
-    id("androidx.navigation.safeargs") version "2.7.6" apply false
-    id("com.android.library") version "8.1.2" apply false
-    id("org.jetbrains.kotlin.jvm") version "1.7.0" apply false
-    id("com.google.dagger.hilt.android") version "2.50" apply false
-    id("androidx.navigation.safeargs.kotlin") version "2.5.3" apply false
+    id("com.android.application") version "8.8.2" apply false
+    id("com.android.library") version "8.8.2" apply false
+    id("org.jetbrains.kotlin.android") version "1.9.23" apply false
+    id("org.jetbrains.kotlin.jvm") version "1.9.23" apply false
+    id("androidx.navigation.safeargs") version "2.8.9" apply false
+    id("androidx.navigation.safeargs.kotlin") version "2.8.9" apply false
+    id("com.google.dagger.hilt.android") version "2.51.1" apply false
 }

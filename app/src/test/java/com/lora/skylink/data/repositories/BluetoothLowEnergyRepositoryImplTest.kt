@@ -1,8 +1,8 @@
 package com.lora.skylink.data.repositories
 
+import com.lora.skylink.data.framework.bluetooth.scanning.BluetoothLowEnergyScanController
+import com.lora.skylink.data.framework.bluetooth.scanning.BluetoothReadyCheckerImpl
 import com.lora.skylink.data.model.WirelessDevice
-import com.lora.skylink.data.remote.bluetooth.BluetoothAdapterManager
-import com.lora.skylink.data.remote.bluetooth.BluetoothLowEnergyScanController
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -19,7 +19,7 @@ class BluetoothLowEnergyRepositoryImplTest {
     private lateinit var bleScanController: BluetoothLowEnergyScanController
 
     @MockK
-    private lateinit var  bluetoothAdapterManager: BluetoothAdapterManager
+    private lateinit var  bluetoothReadyChecker: BluetoothReadyCheckerImpl
 
     private lateinit var bluetoothLowEnergyRepository: BluetoothLowEnergyRepositoryImpl
 
@@ -33,27 +33,27 @@ class BluetoothLowEnergyRepositoryImplTest {
         val scannedDevicesFlow = MutableStateFlow<List<WirelessDevice>>(listOf(device1, device2))
         every { bleScanController.scannedDevices } returns scannedDevicesFlow
 
-        bluetoothLowEnergyRepository = BluetoothLowEnergyRepositoryImpl(bleScanController, bluetoothAdapterManager)
+        bluetoothLowEnergyRepository = BluetoothLowEnergyRepositoryImpl(bleScanController, bluetoothReadyChecker)
     }
 
     @Test
     fun isBluetoothAdapterEnabledShouldReturnTrueWhenAdapterIsEnabled() {
-        every { bluetoothAdapterManager.isBluetoothAdapterEnabled() } returns true
+        every { bluetoothReadyChecker.isBluetoothAdapterReady() } returns true
 
-        val result = bluetoothLowEnergyRepository.isBluetoothAdapterEnabled()
+        val result = bluetoothLowEnergyRepository.isBluetoothAdapterReady()
 
         assert(result)
-        verify { bluetoothAdapterManager.isBluetoothAdapterEnabled()}
+        verify { bluetoothReadyChecker.isBluetoothAdapterReady()}
     }
 
     @Test
     fun isBluetoothAdapterEnabledShouldReturnFalseWhenAdapterIsDisabled() {
-        every { bluetoothAdapterManager.isBluetoothAdapterEnabled() } returns false
+        every { bluetoothReadyChecker.isBluetoothAdapterReady() } returns false
 
-        val result = bluetoothLowEnergyRepository.isBluetoothAdapterEnabled()
+        val result = bluetoothLowEnergyRepository.isBluetoothAdapterReady()
 
         assert(!result)
-        verify { bluetoothAdapterManager.isBluetoothAdapterEnabled() }
+        verify { bluetoothReadyChecker.isBluetoothAdapterReady() }
     }
 
     @Test

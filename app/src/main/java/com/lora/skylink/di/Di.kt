@@ -4,17 +4,16 @@ package com.lora.skylink.di
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import com.lora.skylink.data.remote.bluetooth.BluetoothAdapterManager
-import com.lora.skylink.data.remote.bluetooth.BluetoothLowEnergyScanController
-import com.lora.skylink.data.remote.bluetooth.BluetoothReadyCheckerImpl
-import com.lora.skylink.data.remote.bluetoothlowenergy.BleConnectionManager
+import com.lora.skylink.data.framework.bluetooth.communication.BleCommunicationsManager
+import com.lora.skylink.data.framework.bluetooth.scanning.BluetoothLowEnergyScanController
+import com.lora.skylink.data.framework.bluetooth.scanning.BluetoothReadyCheckerImpl
 import com.lora.skylink.data.repositories.BluetoothConnectivityRepositoryImpl
 import com.lora.skylink.data.repositories.BluetoothLowEnergyRepositoryImpl
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.domain.BluetoothDeviceConverterImpl
-import com.lora.skylink.domain.BluetoothReadyChecker
-import com.lora.skylink.domain.IBluetoothConnectivityRepository
-import com.lora.skylink.domain.IBluetoothLowEnergyRepository
+import com.lora.skylink.domain.interfaces.BluetoothReadyChecker
+import com.lora.skylink.domain.interfaces.IBluetoothConnectivityRepository
+import com.lora.skylink.domain.interfaces.IBluetoothLowEnergyRepository
 import com.lora.skylink.util.AppLogger
 import com.lora.skylink.util.Logger
 import dagger.Module
@@ -23,7 +22,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-
 
 
 @Module
@@ -55,15 +53,15 @@ object Di{
     fun provideConnectionManager(
         @ApplicationContext context: Context,
         bluetoothAdapter: BluetoothAdapter
-    ): BleConnectionManager {
-        return BleConnectionManager(context, bluetoothAdapter)
+    ): BleCommunicationsManager {
+        return BleCommunicationsManager(context, bluetoothAdapter)
     }
 
     @Provides
     @Singleton
     fun provideBluetoothConnectivityRepository(
         deviceConverter: BluetoothDeviceConverter,
-        bleConnectionManager: BleConnectionManager
+        bleConnectionManager: BleCommunicationsManager
     ): IBluetoothConnectivityRepository {
         return BluetoothConnectivityRepositoryImpl(deviceConverter, bleConnectionManager)
     }
@@ -72,8 +70,8 @@ object Di{
     @Singleton
     fun provideBluetoothLowEnergyRepository(
         bleScanController: BluetoothLowEnergyScanController,
-        bleManager: BluetoothAdapterManager
-    ): IBluetoothLowEnergyRepository = BluetoothLowEnergyRepositoryImpl(bleScanController, bleManager)
+        bleChecker: BluetoothReadyCheckerImpl
+    ): IBluetoothLowEnergyRepository = BluetoothLowEnergyRepositoryImpl(bleScanController, bleChecker)
 
     @Provides
     @Singleton

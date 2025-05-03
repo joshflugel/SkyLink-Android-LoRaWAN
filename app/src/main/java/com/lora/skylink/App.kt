@@ -21,6 +21,5 @@ open class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val context: Context = App.applicationContext()
     }
 }

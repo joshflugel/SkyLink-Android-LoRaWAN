@@ -1,8 +1,8 @@
 package com.lora.skylink.presentation.scan
 
-import com.lora.skylink.domain.CheckBluetoothEnabledUseCase
-import com.lora.skylink.domain.ManageBluetoothDeviceConnectionUseCase
-import com.lora.skylink.domain.ScanBluetoothLowEnergyDevicesUseCase
+import com.lora.skylink.domain.usecases.CheckBluetoothEnabledUseCase
+import com.lora.skylink.domain.usecases.ManageBluetoothDeviceConnectionUseCase
+import com.lora.skylink.domain.usecases.ScanBluetoothLowEnergyDevicesUseCase
 import com.lora.skylink.presentation.common.MainDispatcherRule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -2,11 +2,11 @@ package com.lora.skylink.data.repositories
 
 
 import com.lora.skylink.App
+import com.lora.skylink.data.framework.bluetooth.communication.BleCommunicationsManager
+import com.lora.skylink.data.framework.bluetooth.communication.ConnectionEventListener
 import com.lora.skylink.data.model.WirelessDevice
-import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
-import com.lora.skylink.data.remote.bluetoothlowenergy.BleConnectionManager
 import com.lora.skylink.domain.BluetoothDeviceConverter
-import com.lora.skylink.domain.IBluetoothConnectivityRepository
+import com.lora.skylink.domain.interfaces.IBluetoothConnectivityRepository
 import com.lora.skylink.util.AppLogger.loge
 import com.lora.skylink.util.AppLogger.logi
 import javax.inject.Inject
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class BluetoothConnectivityRepositoryImpl @Inject constructor(
     private val deviceConverter: BluetoothDeviceConverter,
-    private val bleConnectionManager: BleConnectionManager
+    private val bleConnectionManager: BleCommunicationsManager
 ) : IBluetoothConnectivityRepository {
 
         override fun connectToDevice(device: WirelessDevice) {
