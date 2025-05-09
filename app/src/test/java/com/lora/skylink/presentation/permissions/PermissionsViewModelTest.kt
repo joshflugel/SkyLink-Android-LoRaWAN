@@ -1,6 +1,9 @@
 package com.lora.skylink.presentation.permissions
 
 import app.cash.turbine.test
+import com.lora.skylink.domain.BluetoothReadyChecker
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -11,10 +14,14 @@ import kotlin.test.assertEquals
 class PermissionsViewModelTest {
 
     private lateinit var viewModel: PermissionsViewModel
+    private lateinit var bluetoothReadyChecker: BluetoothReadyChecker
 
     @Before
     fun setup() {
-        viewModel = PermissionsViewModel()
+        bluetoothReadyChecker = mockk()
+
+        every { bluetoothReadyChecker.isBluetoothAdapterReady() } returns true
+        viewModel = PermissionsViewModel(bluetoothReadyChecker)
     }
 
     @Test

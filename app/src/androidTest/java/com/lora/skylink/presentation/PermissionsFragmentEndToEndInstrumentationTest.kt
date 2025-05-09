@@ -97,7 +97,7 @@ class PermissionsFragmentEndToEndInstrumentationTest {
     @Test
     fun testTheScanFragmentIsShownAfterEnablingPermissionsAndBluetooth() {
 
-        turnOnAndroidBluetooth()
+        assertTrue("Unable to Turn Off Android Bluetooth Setting", turnOnAndroidBluetooth())
 
         // Navigate back to the App to interact with the system permission dialog
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())

@@ -46,3 +46,4 @@ wrapper/
 
 #Exclude, to let builds resolve to different dependency versions and configs
 android.lock
+backup.ab

@@ -1,7 +1,6 @@
 package com.lora.skylink.presentation.scan
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -14,13 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.lora.skylink.R
-import com.lora.skylink.data.model.WirelessDevice
-import com.lora.skylink.data.framework.bluetooth.communication.ConnectionEventListener
 import com.lora.skylink.databinding.FragmentScanBinding
 import com.lora.skylink.presentation.common.PermissionsRequester
 import com.lora.skylink.util.loge
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -72,13 +68,30 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         setupRecyclerView()
         collectWirelessDevices()
         observeUIState()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.eventFlow.collect { event ->
+                when (event) {
+                    is ScanUIEvent.NavigateToChat -> {
+                        val action = ScanFragmentDirections.actionScanDestToChatDest(event.bluetoothDevice)
+                        findNavController().navigate(action)
+                    }
+                    is ScanUIEvent.NavigateToPermissions -> {
+                        navigateToPermissionsFragment()
+                    }
+                    is ScanUIEvent.ShowError -> {
+                        Toast.makeText(requireContext(), event.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+
     }
 
     private fun collectWirelessDevices() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 scanResultAdapter.submitList(uiState.scannedDevices)
-                printScannedDevicesInLogcat(uiState.scannedDevices)
+                viewModel.printScannedDevicesInLogcat(uiState.scannedDevices)
             }
         }
     }
@@ -103,13 +116,6 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         }
     }
 
-    private fun printScannedDevicesInLogcat(devices: List<WirelessDevice>) {
-        val devicesString = devices.joinToString(separator = "\n") { device ->
-            "Name: ${device.name}, MAC Address: ${device.macAddress}, Signal Strength: ${device.signalStrength_dBm}"
-        }
-        loge("List of Devices:\n$devicesString")
-    }
-
     override fun onResume() {
         super.onResume()
         loge("ScanFragment  .onResume")
@@ -117,14 +123,14 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         if(!permissionsRequester.checkAllPermissions()) {
             navigateToPermissionsFragment()
         }
-        viewModel.registerConnectionEventListener(connectionEventListener)
+        viewModel.registerConnectionEventListener()
     }
 
     override fun onStop() {
         super.onStop()
         loge("ScanFragment  .onStop, unRegister Listener")
         viewModel.stopScanning()
-        viewModel.unregisterConnectionEventListener(connectionEventListener)
+        viewModel.unregisterConnectionEventListener()
     }
 
     override fun onDestroy() {
@@ -154,23 +160,5 @@ class ScanFragment : Fragment(R.layout.fragment_scan) {
         val action = ScanFragmentDirections.actionScanDestToPermissionsDest()
         findNavController().navigate(action)
     }
-    fun navigateToChatFragment(bluetoothDevice: BluetoothDevice) {
-        viewLifecycleOwner.lifecycleScope.launch (Dispatchers.Main) {
-            val action = ScanFragmentDirections.actionScanDestToChatDest(bluetoothDevice)
-            findNavController().navigate(action)
-        }
-    }
 
-
-    private val connectionEventListener by lazy {
-        ConnectionEventListener().apply {
-            onConnectionSetupComplete = { gatt ->
-                loge("Navigating to Chat UI... ${gatt.device.name}")
-                navigateToChatFragment(gatt.device)
-            }
-            onDisconnect = {
-                loge("ScanFrag ...DISCONNECTED from Bluetooth LoRa Arduino")
-            }
-        }
-    }
 }
