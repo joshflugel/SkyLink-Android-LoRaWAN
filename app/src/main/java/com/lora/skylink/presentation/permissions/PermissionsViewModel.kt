@@ -1,14 +1,19 @@
 package com.lora.skylink.presentation.permissions
 
 import androidx.lifecycle.ViewModel
-import dagger.hilt.android.HiltAndroidApp
+import com.lora.skylink.domain.BluetoothReadyChecker
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
 data class NumberOfPermissionRequestRetries(var value: Int = 0)
 
-class PermissionsViewModel : ViewModel() {
+@HiltViewModel
+class PermissionsViewModel @Inject constructor(
+    private val bluetoothReadyChecker: BluetoothReadyChecker
+) : ViewModel() {
 
     private val _permissionRequestRetries = MutableStateFlow(0)
     val permissionRequestRetries: StateFlow<Int>get() = _permissionRequestRetries
@@ -21,5 +26,9 @@ class PermissionsViewModel : ViewModel() {
 
     fun userHasDeniedPermissions():Boolean {
         return (retries.value > 2)
+    }
+
+    fun isBluetoothAdapterReady(): Boolean {
+        return bluetoothReadyChecker.isBluetoothAdapterReady()
     }
 }

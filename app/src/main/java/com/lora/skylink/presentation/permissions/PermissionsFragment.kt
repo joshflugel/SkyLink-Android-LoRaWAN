@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.lora.skylink.R
 import com.lora.skylink.databinding.FragmentPermissionsBinding
-import com.lora.skylink.domain.BluetoothReadyChecker
 import com.lora.skylink.util.loge
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -27,7 +26,6 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
     private lateinit var permissionsState : PermissionsState
 
     @Inject lateinit var bluetoothAdapter: BluetoothAdapter
-    @Inject lateinit var bluetoothReadyChecker: BluetoothReadyChecker
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,14 +44,14 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
     override fun onResume() {
         super.onResume()
         println("FLUGEL - PermissionsFrag.onResume")
-        if (permissionsState.areAllPermissionsGranted() && isBluetoothAdapterReady()) {
+        if (permissionsState.areAllPermissionsGranted() && viewModel.isBluetoothAdapterReady()) {
             loge("ALL PERMISSIONS OK, BLUETOOTH DEVICE OK... proceeding to SCAN UI")
             permissionsState.navigateToScanFragment()
         }
     }
 
     private fun handleScanDevicesButtonClicked() {
-            if (permissionsState.areAllPermissionsGranted() && isBluetoothAdapterReady()) {
+            if (permissionsState.areAllPermissionsGranted() &&  viewModel.isBluetoothAdapterReady()) {
                 loge("ALL PERMISSIONS OK")
                 permissionsState.navigateToScanFragment()
             } else {
@@ -62,7 +60,7 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
                     permissionsState.requestPermissions { allGranted ->
                         if (allGranted) {
                             loge("ALL PERMISSIONS NOW **GRANTED**, navigating to ScanFragment")
-                            if(isBluetoothAdapterReady()) {
+                            if( viewModel.isBluetoothAdapterReady()) {
                                 permissionsState.navigateToScanFragment()
                             } else {
                                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
@@ -75,10 +73,6 @@ class PermissionsFragment : Fragment(R.layout.fragment_permissions) {
                     }
                 }
             }
-    }
-
-    private fun isBluetoothAdapterReady(): Boolean {
-        return bluetoothReadyChecker.isBluetoothAdapterReady()
     }
 
     private val requestEnableBluetoothLauncher =
