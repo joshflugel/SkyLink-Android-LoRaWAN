@@ -3,9 +3,9 @@ package com.lora.skylink.data.repositories
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import com.lora.skylink.App
+import com.lora.skylink.data.framework.bluetooth.communication.BleCommunicationsManager
+import com.lora.skylink.data.framework.bluetooth.communication.ConnectionEventListener
 import com.lora.skylink.data.model.WirelessDevice
-import com.lora.skylink.data.remote.bluetoothlowenergy.BleConnectionManager
-import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
 import com.lora.skylink.domain.BluetoothDeviceConverter
 import com.lora.skylink.util.Logger
 import io.mockk.clearAllMocks
@@ -30,19 +30,19 @@ class BluetoothConnectivityRepositoryImplTest {
     private lateinit var deviceConverter: BluetoothDeviceConverter
     private lateinit var context: Context
     private lateinit var logger: Logger
-    private lateinit var bleConnectionManager: BleConnectionManager
+    private lateinit var bleCommunicationsManager: BleCommunicationsManager
 
     @Before
     fun setup() {
         deviceConverter = mockk()
         context = mockk(relaxed = true)
         logger = mockk(relaxed = true)
-        bleConnectionManager = mockk(relaxed = true)
+        bleCommunicationsManager = mockk(relaxed = true)
 
         mockkObject(App.Companion)
         every { App.applicationContext() } returns context
 
-        repository = BluetoothConnectivityRepositoryImpl(deviceConverter, bleConnectionManager)
+        repository = BluetoothConnectivityRepositoryImpl(deviceConverter, bleCommunicationsManager)
     }
 
     @After
@@ -64,7 +64,7 @@ class BluetoothConnectivityRepositoryImplTest {
 
         // Verify interactions
         verify { deviceConverter.toBluetoothDevice(wirelessDevice) }
-        verify { bleConnectionManager.connect(bluetoothDevice, context) }
+        verify { bleCommunicationsManager.connect(bluetoothDevice, context) }
     }
 
     @Test
@@ -77,7 +77,7 @@ class BluetoothConnectivityRepositoryImplTest {
         repository.disconnectFromDevice(wirelessDevice)
 
         verify { deviceConverter.toBluetoothDevice(wirelessDevice) }
-        verify { bleConnectionManager.disconnectFromDevice(bluetoothDevice) }
+        verify { bleCommunicationsManager.disconnectFromDevice(bluetoothDevice) }
     }
 
     @Test
@@ -90,7 +90,7 @@ class BluetoothConnectivityRepositoryImplTest {
         repository.teardownConnection(wirelessDevice)
 
         verify { deviceConverter.toBluetoothDevice(wirelessDevice) }
-        verify { bleConnectionManager.disconnectFromDeviceAndReleaseResources(bluetoothDevice) }
+        verify { bleCommunicationsManager.disconnectFromDeviceAndReleaseResources(bluetoothDevice) }
     }
 
     @Test
@@ -99,7 +99,7 @@ class BluetoothConnectivityRepositoryImplTest {
 
         repository.registerConnectionEventListener(listener)
 
-        verify { bleConnectionManager.registerListener(any()) }
+        verify { bleCommunicationsManager.registerListener(any()) }
     }
 
     @Test
@@ -108,6 +108,6 @@ class BluetoothConnectivityRepositoryImplTest {
 
         repository.unregisterConnectionEventListener(listener)
 
-        verify { bleConnectionManager.unregisterListener(any()) }
+        verify { bleCommunicationsManager.unregisterListener(any()) }
     }
 }

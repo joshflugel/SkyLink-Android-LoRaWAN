@@ -4,11 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.multidex.BuildConfig
 import com.lora.skylink.data.model.WirelessDevice
-import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
-import com.lora.skylink.domain.CheckBluetoothEnabledUseCase
-import com.lora.skylink.domain.ManageBluetoothDeviceConnectionUseCase
-import com.lora.skylink.domain.ScanBluetoothLowEnergyDevicesUseCase
-import com.lora.skylink.util.loge
+import com.lora.skylink.data.framework.bluetooth.communication.ConnectionEventListener
+import com.lora.skylink.domain.usecases.CheckBluetoothEnabledUseCase
+import com.lora.skylink.domain.usecases.ManageBluetoothDeviceConnectionUseCase
+import com.lora.skylink.domain.usecases.ScanBluetoothLowEnergyDevicesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow

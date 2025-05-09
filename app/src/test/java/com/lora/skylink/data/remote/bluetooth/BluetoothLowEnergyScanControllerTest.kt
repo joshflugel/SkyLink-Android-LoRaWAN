@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanSettings
+import com.lora.skylink.data.framework.bluetooth.scanning.BluetoothLowEnergyScanController
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -15,7 +16,7 @@ import org.robolectric.annotation.Config
 
 
 @RunWith(RobolectricTestRunner::class) // Allows for unit testing Android framework classes on the JVM.
-@Config(sdk = [28])
+@Config(sdk = [28], manifest = Config.NONE)
 class BluetoothLowEnergyScanControllerTest {
 
     private lateinit var bleScanController: BluetoothLowEnergyScanController

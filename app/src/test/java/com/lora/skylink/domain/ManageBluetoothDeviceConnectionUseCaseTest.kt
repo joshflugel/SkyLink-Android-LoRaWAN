@@ -1,7 +1,9 @@
 package com.lora.skylink.domain
 
-import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
+import com.lora.skylink.data.framework.bluetooth.communication.ConnectionEventListener
 import com.lora.skylink.data.model.WirelessDevice
+import com.lora.skylink.domain.interfaces.IBluetoothConnectivityRepository
+import com.lora.skylink.domain.usecases.ManageBluetoothDeviceConnectionUseCase
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before

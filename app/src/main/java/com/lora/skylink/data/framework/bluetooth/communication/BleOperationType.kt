@@ -1,4 +1,4 @@
-package com.lora.skylink.data.remote.bluetoothlowenergy
+package com.lora.skylink.data.framework.bluetooth.communication
 
 import android.bluetooth.BluetoothDevice
 import android.content.Context

@@ -1,7 +1,8 @@
-package com.lora.skylink.domain
+package com.lora.skylink.domain.usecases
 
-import com.lora.skylink.data.remote.bluetoothlowenergy.ConnectionEventListener
+import com.lora.skylink.data.framework.bluetooth.communication.ConnectionEventListener
 import com.lora.skylink.data.model.WirelessDevice
+import com.lora.skylink.domain.interfaces.IBluetoothConnectivityRepository
 import javax.inject.Inject
 
 class ManageBluetoothDeviceConnectionUseCase @Inject constructor(
