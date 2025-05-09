@@ -1,7 +1,7 @@
 package com.lora.skylink.presentation.permissions
 
 import androidx.lifecycle.ViewModel
-import com.lora.skylink.domain.BluetoothReadyChecker
+import com.lora.skylink.domain.interfaces.BluetoothReadyChecker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
